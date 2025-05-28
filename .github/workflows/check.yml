@@ -2,7 +2,7 @@ name: Check VHS Termin
 
 on:
   schedule:
-    - cron: "*/11 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 jobs:
