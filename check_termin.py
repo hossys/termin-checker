@@ -10,7 +10,6 @@ def check_available_termin():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # اگر واژه "voll" (پر) در متن صفحه باشد، یعنی هیچ ترمینی موجود نیست
     if "voll" in soup.get_text().lower():
         return None
 
