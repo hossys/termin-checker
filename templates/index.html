@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Termin Checker</title>
+</head>
+<body>
+    <h2>Get notified when a slot opens</h2>
+    <form action="/submit" method="POST">
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+        <label>City:</label><br>
+        <select name="city" required>
+            <option value="">-- Select City --</option>
+            <option value="Hamburg">Hamburg</option>
+            <option value="Berlin">Berlin</option>
+            <!-- Add more cities if needed -->
+        </select><br><br>
+        <button type="submit">Subscribe</button>
+    </form>
+</body>
+</html>
