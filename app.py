@@ -21,8 +21,9 @@ def submit():
     return redirect(url_for('index'))
 
 def send_confirmation_email(to_email, city):
-    sender_email = 'YOUR_EMAIL@gmail.com'
-    sender_password = 'YOUR_APP_PASSWORD'  # App password if using Gmail
+    print(f"Sending confirmation to {to_email} for city {city}")
+    sender_email = 'terminnotify@gmail.com'
+    sender_password = 'cytmec-miRhov-7jutmy'  
 
     subject = "You're subscribed – We'll notify you when an appointment opens"
     body = f"""
