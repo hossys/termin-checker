@@ -1,20 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Termin Checker</title>
+    <title>Termin Notify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', 'Share Tech Mono', monospace;
+            background-color: #0f0f0f;
+            color: #00ffcc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        form {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00ffcc55;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        input, select, button {
+            font-family: 'Share Tech Mono', monospace;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #00ffcc;
+            background-color: #000;
+            color: #00ffcc;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #00ffcc;
+            color: #000;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h2>Get notified when a slot opens</h2>
+    <h2>Get Notified When a Slot Opens</h2>
     <form action="/submit" method="POST">
         <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <input type="email" name="email" required><br>
         <label>City:</label><br>
         <select name="city" required>
             <option value="">-- Select City --</option>
             <option value="Hamburg">Hamburg</option>
             <option value="Berlin">Berlin</option>
-            <!-- Add more cities if needed -->
-        </select><br><br>
+        </select><br>
         <button type="submit">Subscribe</button>
     </form>
 </body>
