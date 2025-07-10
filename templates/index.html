@@ -54,15 +54,20 @@
 </head>
 <body>
     <h2>Get Notified When a Slot Opens</h2>
-    <form action="/submit" method="POST">
+    <form action="/" method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br>
+
         <label>Email:</label><br>
         <input type="email" name="email" required><br>
+
         <label>City:</label><br>
         <select name="city" required>
             <option value="">-- Select City --</option>
             <option value="Hamburg">Hamburg</option>
             <option value="Berlin">Berlin</option>
         </select><br>
+
         <button type="submit">Subscribe</button>
     </form>
 </body>
