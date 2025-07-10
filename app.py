@@ -19,15 +19,16 @@ def submit():
     name = request.form.get('name')
     email = request.form.get('email').strip().lower()
     city = request.form.get('city')
+    service = request.form.get('service')
 
-    if not (name and email and city):
+    if not (name and email and city and service):
         return redirect(url_for('index'))
 
-    log(f"Submit route reached for {name}, {email}, {city}")
+    log(f"Submit route reached for {name}, {email}, {city}, {service}")
 
     if not os.path.exists("subscribers.csv"):
         with open("subscribers.csv", "w") as f:
-            f.write("name,email,city\n")
+            f.write("name,email,city,service\n")
 
     is_duplicate = False
     with open("subscribers.csv", "r") as f:
@@ -37,17 +38,17 @@ def submit():
                 break
 
     if is_duplicate:
-        send_confirmation_email(name, email, city, duplicate=True)
-        return render_template('thanks.html', name=name, email=email, city=city, duplicate=True)
+        send_confirmation_email(name, email, city, service, duplicate=True)
+        return render_template('thanks.html', name=name, email=email, city=city, service=service, duplicate=True)
 
     with open("subscribers.csv", "a") as f:
-        f.write(f"{name},{email},{city}\n")
+        f.write(f"{name},{email},{city},{service}\n")
 
-    send_confirmation_email(name, email, city, duplicate=False)
-    return render_template('thanks.html', name=name, email=email, city=city, duplicate=False)
+    send_confirmation_email(name, email, city, service, duplicate=False)
+    return render_template('thanks.html', name=name, email=email, city=city, service=service, duplicate=False)
 
-def send_confirmation_email(name, to_email, city, duplicate):
-    log(f"Sending email to {name} ({to_email}) for city {city}, duplicate={duplicate}")
+def send_confirmation_email(name, to_email, city, service, duplicate):
+    log(f"Sending email to {name} ({to_email}) for city {city}, service {service}, duplicate={duplicate}")
 
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
@@ -57,7 +58,7 @@ def send_confirmation_email(name, to_email, city, duplicate):
         body = f"""
 Hi {name},
 
-You're already on our notification list for appointments in {city}.
+You're already on our notification list for {service} appointments in {city}.
 
 Don't worry — we'll notify you as soon as a slot becomes available.
 
@@ -73,7 +74,7 @@ Hi {name},
 
 Thank you for signing up!
 
-We’ve successfully added your email to the notification list for available Einbürgerungstest appointments in {city}.
+We’ve successfully added your email to the notification list for available {service} appointments in {city}.
 
 As soon as a slot becomes available, we will notify you right away.
 
