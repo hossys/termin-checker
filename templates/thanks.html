@@ -29,8 +29,14 @@
     </style>
 </head>
 <body>
-    <h2>Thank you!</h2>
-    <p>We've added <strong>{{ email }}</strong> to the notification list for <strong>{{ city }}</strong>.</p>
-    <p>You will be alerted as soon as an appointment becomes available.</p>
+    {% if duplicate %}
+        <h2>You’re already subscribed.</h2>
+        <p>The email <strong>{{ email }}</strong> is already on our list for <strong>{{ city }}</strong>.</p>
+        <p>No worries — we’ll notify you as soon as an appointment becomes available.</p>
+    {% else %}
+        <h2>Thank you, {{ name }}!</h2>
+        <p>We've added <strong>{{ email }}</strong> to the notification list for <strong>{{ city }}</strong>.</p>
+        <p>You will be alerted as soon as an appointment becomes available.</p>
+    {% endif %}
 </body>
 </html>
