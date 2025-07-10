@@ -59,7 +59,7 @@ def send_confirmation_email(name, to_email, city, office, duplicate):
         body = f"""
 Hi {name},
 
-You're already on our notification list for **{office}** appointments in {city}.
+You're already on our notification list for {office} appointments in {city}.
 
 No need to register again — we will notify you as soon as a slot opens.
 
@@ -73,7 +73,7 @@ Hi {name},
 
 Thank you for signing up!
 
-We’ve successfully added your email to the notification list for **{office}** appointments in {city}.
+We’ve successfully added your email to the notification list for {office} appointments in {city}.
 
 As soon as a slot becomes available, we will notify you right away.
 
