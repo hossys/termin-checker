@@ -19,22 +19,30 @@ def submit():
     email = request.form.get('email')
     city = request.form.get('city')
 
-    with open("test_log.txt", "a") as f:
-        f.write(f"Submit route reached for {name}, {email}, {city}\n")
+    if not (name and email and city):
+        return redirect(url_for('index'))
 
-    print(f"Submit route reached for {name}, {email}, {city}")
+    log(f"Submit route reached for {name}, {email}, {city}")
 
-    if name and email and city:
-        send_confirmation_email(name, email, city)
-        return render_template('thanks.html', name=name, email=email, city=city)
+    # ایجاد فایل CSV اگه وجود نداره
+    if not os.path.exists("subscribers.csv"):
+        with open("subscribers.csv", "w") as f:
+            f.write("name,email,city\n")
 
-    return redirect(url_for('index'))
+    # بررسی تکراری بودن ایمیل
+    with open("subscribers.csv", "r") as f:
+        if any(email in line for line in f.readlines()):
+            return render_template('thanks.html', name=name, email=email, city=city, duplicate=True)
+
+    # ذخیره اطلاعات
+    with open("subscribers.csv", "a") as f:
+        f.write(f"{name},{email},{city}\n")
+
+    send_confirmation_email(name, email, city)
+    return render_template('thanks.html', name=name, email=email, city=city, duplicate=False)
 
 def send_confirmation_email(name, to_email, city):
-    with open("test_log.txt", "a") as f:
-        f.write(f"Sending confirmation to {name} ({to_email}) for city {city}\n")
-
-    print(f"Sending confirmation to {name} ({to_email}) for city {city}")
+    log(f"Sending confirmation to {name} ({to_email}) for city {city}")
 
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')  
@@ -65,8 +73,10 @@ Termin Checker Team
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
             server.send_message(message)
-        with open("test_log.txt", "a") as f:
-            f.write("Email sent successfully\n")
+        log("Email sent successfully")
     except Exception as e:
-        with open("test_log.txt", "a") as f:
-            f.write(f"Error sending email: {str(e)}\n")
+        log(f"Error sending email: {str(e)}")
+
+def log(text):
+    with open("test_log.txt", "a") as f:
+        f.write(text + "\n")
