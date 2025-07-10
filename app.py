@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 import os
-import csv
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -19,36 +18,38 @@ def submit():
     name = request.form.get('name')
     email = request.form.get('email').strip().lower()
     city = request.form.get('city')
-    service = request.form.get('service')
+    office = request.form.get('office')
 
-    if not (name and email and city and service):
+    if not (name and email and city and office):
         return redirect(url_for('index'))
 
-    log(f"Submit route reached for {name}, {email}, {city}, {service}")
+    log(f"Submit route reached for {name}, {email}, {city}, {office}")
 
+    # اگه فایل نبود، بساز
     if not os.path.exists("subscribers.csv"):
         with open("subscribers.csv", "w") as f:
-            f.write("name,email,city,service\n")
+            f.write("name,email,city,office\n")
 
     is_duplicate = False
     with open("subscribers.csv", "r") as f:
         for line in f.readlines():
-            if email in line:
+            if f"{email},{city},{office}" in line:
                 is_duplicate = True
                 break
 
     if is_duplicate:
-        send_confirmation_email(name, email, city, service, duplicate=True)
-        return render_template('thanks.html', name=name, email=email, city=city, service=service, duplicate=True)
+        send_confirmation_email(name, email, city, office, duplicate=True)
+        return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=True)
 
+    # ذخیره اطلاعات
     with open("subscribers.csv", "a") as f:
-        f.write(f"{name},{email},{city},{service}\n")
+        f.write(f"{name},{email},{city},{office}\n")
 
-    send_confirmation_email(name, email, city, service, duplicate=False)
-    return render_template('thanks.html', name=name, email=email, city=city, service=service, duplicate=False)
+    send_confirmation_email(name, email, city, office, duplicate=False)
+    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=False)
 
-def send_confirmation_email(name, to_email, city, service, duplicate):
-    log(f"Sending email to {name} ({to_email}) for city {city}, service {service}, duplicate={duplicate}")
+def send_confirmation_email(name, to_email, city, office, duplicate):
+    log(f"Sending email to {name} ({to_email}) for city {city}, office {office}, duplicate={duplicate}")
 
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
@@ -58,11 +59,9 @@ def send_confirmation_email(name, to_email, city, service, duplicate):
         body = f"""
 Hi {name},
 
-You're already on our notification list for {service} appointments in {city}.
+You're already on our notification list for **{office}** appointments in {city}.
 
-Don't worry — we'll notify you as soon as a slot becomes available.
-
-No need to sign up again.
+No need to register again — we will notify you as soon as a slot opens.
 
 Cheers,  
 Termin Checker Team
@@ -74,11 +73,11 @@ Hi {name},
 
 Thank you for signing up!
 
-We’ve successfully added your email to the notification list for available {service} appointments in {city}.
+We’ve successfully added your email to the notification list for **{office}** appointments in {city}.
 
 As soon as a slot becomes available, we will notify you right away.
 
-In the meantime, feel free to relax — we’ll take care of the checking.
+In the meantime, relax — we’ll handle the checking.
 
 Cheers,  
 Termin Checker Team
