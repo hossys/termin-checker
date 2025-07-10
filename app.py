@@ -11,6 +11,23 @@ load_dotenv()
 app = Flask(__name__)
 DB_PATH = "subscribers.db"
 
+def initialize_db():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS subscribers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            city TEXT NOT NULL,
+            office TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+initialize_db()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -30,7 +47,6 @@ def submit():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # بررسی تکراری بودن
     cursor.execute("""
         SELECT 1 FROM subscribers WHERE email=? AND city=? AND office=?
     """, (email, city, office))
