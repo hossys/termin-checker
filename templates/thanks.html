@@ -15,10 +15,12 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         h2 {
             color: #00ffff;
             font-size: 24px;
         }
+
         p {
             font-size: 16px;
             text-align: center;
@@ -30,7 +32,7 @@
     {% if duplicate %}
         <h2>You’re already subscribed.</h2>
         <p>The email <strong>{{ email }}</strong> is already on our list for <strong>{{ city }}</strong>.</p>
-        <p>No worries — we’ll notify you as soon as an appointment becomes available.</p>
+        <p>Please wait — we’ll notify you as soon as an appointment becomes available.</p>
     {% else %}
         <h2>Thank you, {{ name }}!</h2>
         <p>We've added <strong>{{ email }}</strong> to the notification list for <strong>{{ city }}</strong>.</p>
