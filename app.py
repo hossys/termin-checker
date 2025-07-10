@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
+from dotenv import load_dotenv
+load_dotenv()
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -13,7 +16,8 @@ def index():
 def submit():
     email = request.form.get('email')
     city = request.form.get('city')
-
+    with open("test_log.txt", "a") as f:f.write("Submit route reached\n")
+    print("Submit route reached")
     if email and city:
         send_confirmation_email(email, city)
         return render_template('thanks.html', email=email, city=city)
@@ -21,9 +25,11 @@ def submit():
     return redirect(url_for('index'))
 
 def send_confirmation_email(to_email, city):
+    with open("test_log.txt", "a") as f:f.write(f"Sending confirmation to {to_email} for city {city}\n")
+    print("send_confirmation_email() called")    
     print(f"Sending confirmation to {to_email} for city {city}")
-    sender_email = 'terminnotify@gmail.com'
-    sender_password = 'cytmec-miRhov-7jutmy'  
+    sender_email = os.getenv('EMAIL_USER')
+    sender_password = os.getenv('EMAIL_PASS')  
 
     subject = "You're subscribed – We'll notify you when an appointment opens"
     body = f"""
@@ -51,5 +57,6 @@ def send_confirmation_email(to_email, city):
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
             server.send_message(message)
+        with open("test_log.txt", "a") as f:f.write("Email sent successfully\n")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        with open("test_log.txt", "a") as f:f.write(f"Error sending email: {str(e)}\n")
