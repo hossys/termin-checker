@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 import os
+import csv
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -16,7 +17,7 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     name = request.form.get('name')
-    email = request.form.get('email')
+    email = request.form.get('email').strip().lower()
     city = request.form.get('city')
 
     if not (name and email and city):
@@ -24,31 +25,50 @@ def submit():
 
     log(f"Submit route reached for {name}, {email}, {city}")
 
-    # ایجاد فایل CSV اگه وجود نداره
     if not os.path.exists("subscribers.csv"):
         with open("subscribers.csv", "w") as f:
             f.write("name,email,city\n")
 
-    # بررسی تکراری بودن ایمیل
+    is_duplicate = False
     with open("subscribers.csv", "r") as f:
-        if any(email in line for line in f.readlines()):
-            return render_template('thanks.html', name=name, email=email, city=city, duplicate=True)
+        for line in f.readlines():
+            if email in line:
+                is_duplicate = True
+                break
 
-    # ذخیره اطلاعات
+    if is_duplicate:
+        send_confirmation_email(name, email, city, duplicate=True)
+        return render_template('thanks.html', name=name, email=email, city=city, duplicate=True)
+
     with open("subscribers.csv", "a") as f:
         f.write(f"{name},{email},{city}\n")
 
-    send_confirmation_email(name, email, city)
+    send_confirmation_email(name, email, city, duplicate=False)
     return render_template('thanks.html', name=name, email=email, city=city, duplicate=False)
 
-def send_confirmation_email(name, to_email, city):
-    log(f"Sending confirmation to {name} ({to_email}) for city {city}")
+def send_confirmation_email(name, to_email, city, duplicate):
+    log(f"Sending email to {name} ({to_email}) for city {city}, duplicate={duplicate}")
 
     sender_email = os.getenv('EMAIL_USER')
-    sender_password = os.getenv('EMAIL_PASS')  
+    sender_password = os.getenv('EMAIL_PASS')
 
-    subject = "You're subscribed – We'll notify you when an appointment opens"
-    body = f"""
+    if duplicate:
+        subject = "You’re already subscribed"
+        body = f"""
+Hi {name},
+
+You're already on our notification list for appointments in {city}.
+
+Don't worry — we'll notify you as soon as a slot becomes available.
+
+No need to sign up again.
+
+Cheers,  
+Termin Checker Team
+"""
+    else:
+        subject = "You're subscribed – We'll notify you when an appointment opens"
+        body = f"""
 Hi {name},
 
 Thank you for signing up!
