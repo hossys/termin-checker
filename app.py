@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 import os
 import smtplib
+import sqlite3
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
 
 app = Flask(__name__)
+DB_PATH = "subscribers.db"
 
 @app.route('/')
 def index():
@@ -25,28 +27,27 @@ def submit():
 
     log(f"Submit route reached for {name}, {email}, {city}, {office}")
 
-    # اگه فایل نبود، بساز
-    if not os.path.exists("subscribers.csv"):
-        with open("subscribers.csv", "w") as f:
-            f.write("name,email,city,office\n")
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
 
-    is_duplicate = False
-    with open("subscribers.csv", "r") as f:
-        for line in f.readlines():
-            if f"{email},{city},{office}" in line:
-                is_duplicate = True
-                break
+    # بررسی تکراری بودن
+    cursor.execute("""
+        SELECT 1 FROM subscribers WHERE email=? AND city=? AND office=?
+    """, (email, city, office))
+    result = cursor.fetchone()
+    is_duplicate = result is not None
 
-    if is_duplicate:
-        send_confirmation_email(name, email, city, office, duplicate=True)
-        return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=True)
+    if not is_duplicate:
+        cursor.execute("""
+            INSERT INTO subscribers (name, email, city, office)
+            VALUES (?, ?, ?, ?)
+        """, (name, email, city, office))
+        conn.commit()
 
-    # ذخیره اطلاعات
-    with open("subscribers.csv", "a") as f:
-        f.write(f"{name},{email},{city},{office}\n")
+    conn.close()
 
-    send_confirmation_email(name, email, city, office, duplicate=False)
-    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=False)
+    send_confirmation_email(name, email, city, office, duplicate=is_duplicate)
+    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=is_duplicate)
 
 def send_confirmation_email(name, to_email, city, office, duplicate):
     log(f"Sending email to {name} ({to_email}) for city {city}, office {office}, duplicate={duplicate}")
