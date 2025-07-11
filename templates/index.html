@@ -5,15 +5,22 @@
     <title>Termin Notify</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: 'Orbitron', 'Share Tech Mono', monospace;
             background-color: #0f0f0f;
             color: #00ffcc;
             display: flex;
             flex-direction: column;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
             padding: 20px;
         }
 
@@ -57,36 +64,38 @@
         }
 
         .footer-image {
-            margin-top: 40px;
             width: 100%;
             height: auto;
             display: block;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
-    <h2>Get Notified When a Slot Opens</h2>
-    <form action="/submit" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" placeholder="Your full name" required>
+    <div class="main-content">
+        <h2>Get Notified When a Slot Opens</h2>
+        <form action="/submit" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="you@example.com" required>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-        <label for="city">City:</label>
-        <select name="city" id="city" required>
-            <option value="">-- Select City --</option>
-            <option value="Hamburg">Hamburg</option>
-            <option value="Berlin">Berlin</option>
-        </select>
+            <label for="city">City:</label>
+            <select name="city" id="city" required>
+                <option value="">-- Select City --</option>
+                <option value="Hamburg">Hamburg</option>
+                <option value="Berlin">Berlin</option>
+            </select>
 
-        <label for="service">Service:</label>
-        <select name="service" id="service" required>
-            <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-        </select>
+            <label for="service">Service:</label>
+            <select name="service" id="service" required>
+                <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
+            </select>
 
-        <button type="submit">Subscribe</button>
-    </form>
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
 
     <img src="{{ url_for('static', filename='sleep.jpg') }}" alt="Sleeping Illustration" class="footer-image">
 </body>
