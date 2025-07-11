@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Termin Notify</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
@@ -28,15 +29,19 @@
         h2 {
             color: #00ffff;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         label {
             font-size: 14px;
+            margin-top: 10px;
+            display: block;
         }
 
         input, select, button {
             font-family: 'Share Tech Mono', monospace;
-            margin: 10px 0;
+            margin-top: 5px;
+            margin-bottom: 15px;
             padding: 10px;
             width: 100%;
             border: 1px solid #00ffcc;
@@ -55,23 +60,23 @@
 <body>
     <h2>Get Notified When a Slot Opens</h2>
     <form action="/submit" method="POST">
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-        <label>City:</label><br>
-        <select name="city" required>
+        <label for="city">City:</label>
+        <select name="city" id="city" required>
             <option value="">-- Select City --</option>
             <option value="Hamburg">Hamburg</option>
             <option value="Berlin">Berlin</option>
-        </select><br>
+        </select>
 
-        <label>Service:</label><br>
-        <select name="service" required>
+        <label for="service">Service:</label>
+        <select name="service" id="service" required>
             <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-        </select><br>
+        </select>
 
         <button type="submit">Subscribe</button>
     </form>
