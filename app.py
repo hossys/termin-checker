@@ -37,7 +37,7 @@ def submit():
     name = request.form.get('name')
     email = request.form.get('email').strip().lower()
     city = request.form.get('city')
-    office = request.form.get('office')
+    office = request.form.get('service')
 
     if not (name and email and city and office):
         return redirect(url_for('index'))
