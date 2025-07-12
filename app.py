@@ -10,6 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 DB_PATH = "subscribers.db"
+WISHLIST_URL = "https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share"
 
 def initialize_db():
     conn = sqlite3.connect(DB_PATH)
@@ -30,7 +31,7 @@ initialize_db()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', wishlist_url=WISHLIST_URL)
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -63,7 +64,7 @@ def submit():
     conn.close()
 
     send_confirmation_email(name, email, city, office, duplicate=is_duplicate)
-    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=is_duplicate)
+    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=is_duplicate, wishlist_url=WISHLIST_URL)
 
 def send_confirmation_email(name, to_email, city, office, duplicate):
     log(f"Sending email to {name} ({to_email}) for city {city}, office {office}, duplicate={duplicate}")
@@ -80,6 +81,8 @@ You're already on our notification list for {office} appointments in {city}.
 
 No need to register again — we will notify you as soon as a slot opens.
 
+If you'd like to support this project, feel free to check out the gift list: {WISHLIST_URL}
+
 Cheers,  
 Termin Checker Team
 """
@@ -94,7 +97,7 @@ We’ve successfully added your email to the notification list for {office} appo
 
 As soon as a slot becomes available, we will notify you right away.
 
-In the meantime, relax — we’ll handle the checking.
+If you'd like to support this project, feel free to check out the gift list: {WISHLIST_URL}
 
 Cheers,  
 Termin Checker Team
