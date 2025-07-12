@@ -41,6 +41,17 @@
             color: #ffffff;
             font-weight: bold;
         }
+
+        .donation {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #00ffaa;
+        }
+
+        .donation a {
+            color: #00ffff;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -54,6 +65,11 @@
             <p>We've added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
             <p>You’ll get an alert when a slot becomes available.</p>
         {% endif %}
+
+        <div class="donation">
+            If you’d like to support this project, feel free to check our
+            <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Amazon Wish List</a>.
+        </div>
     </div>
 </body>
 </html>
