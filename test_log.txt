@@ -1,0 +1,61 @@
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Error sending email: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 8926c6da1cb9f-50556970e29sm227684173.84 - gsmtp')
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Email sent successfully
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Error sending email: (334, b'UGFzc3dvcmQ6')
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Error sending email: (334, b'UGFzc3dvcmQ6')
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Error sending email: (334, b'UGFzc3dvcmQ6')
+Submit route reached
+Sending confirmation to hsnsbrnsn@gmail.com for city Hamburg
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg
+Sending confirmation to Hossein (hsnsbrnsn@gmail.com) for city Hamburg
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg
+Sending confirmation to Hossein (hsnsbrnsn@gmail.com) for city Hamburg
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg
+Sending confirmation to Hossein (hsnsbrnsn@gmail.com) for city Hamburg
+Email sent successfully
+Submit route reached for Hossein, hansbrnsn@gmail.com, Hamburg
+Sending confirmation to Hossein (hansbrnsn@gmail.com) for city Hamburg
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg
+Sending email to Hossein (hsnsbrnsn@gmail.com) for city Hamburg, duplicate=True
+Email sent successfully
+Submit route reached for Hhh, hsnsbrnsn@gmail.com, Hamburg
+Sending email to Hhh (hsnsbrnsn@gmail.com) for city Hamburg, duplicate=True
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Hossein (hsnsbrnsn@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=False
+Email sent successfully
+Submit route reached for Hossein, hsnsbrnsn@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Hossein (hsnsbrnsn@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=True
+Email sent successfully
+Submit route reached for Hossein, hsnsbrns.n@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Hossein (hsnsbrns.n@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=False
+Email sent successfully
+Submit route reached for Kiana Abedini, kiana92abedini@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Kiana Abedini (kiana92abedini@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=False
+Email sent successfully
+Submit route reached for Hossein, jusfortest13@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Hossein (jusfortest13@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=False
+Email sent successfully
+Submit route reached for Kiana Abedini, kiana92abedini@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Kiana Abedini (kiana92abedini@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=True
+Email sent successfully
+Submit route reached for Hossein, jusfortest13@gmail.com, Hamburg, Einbürgerungstest
+Sending email to Hossein (jusfortest13@gmail.com) for city Hamburg, office Einbürgerungstest, duplicate=True
+Email sent successfully
