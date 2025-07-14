@@ -9,7 +9,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_PATH = "subscribers.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
+LOG_PATH = os.path.join(BASE_DIR, "check_log.txt")
 
 city_config = {
     "hamburg": {
@@ -19,7 +21,7 @@ city_config = {
 }
 
 def log(text):
-    with open("check_log.txt", "a", encoding="utf-8") as f:
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(text + "\n")
 
 def check_available(city_key):
