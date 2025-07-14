@@ -1,119 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Termin Notify</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Orbitron', 'Share Tech Mono', monospace;
-            background-color: #0f0f0f;
-            color: #00ffcc;
-            display: flex;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8">
+  <title>Termin Notify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
 
-        form {
-            background-color: #1a1a1a;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px #00ffcc55;
-            width: 100%;
-            max-width: 400px;
-        }
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 420px;
+    }
 
-        h2 {
-            color: #00ffff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    h2 {
+      color: #222;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 600;
+    }
 
-        label {
-            font-size: 14px;
-            margin-top: 10px;
-            display: block;
-        }
+    label {
+      font-size: 14px;
+      margin-top: 12px;
+      display: block;
+      font-weight: 500;
+    }
 
-        input, select, button {
-            font-family: 'Share Tech Mono', monospace;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #00ffcc;
-            background-color: #000;
-            color: #00ffcc;
-            border-radius: 5px;
-        }
+    input, select, button {
+      margin-top: 6px;
+      margin-bottom: 16px;
+      padding: 12px;
+      width: 100%;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-        button:hover {
-            background-color: #00ffcc;
-            color: #000;
-            cursor: pointer;
-        }
+    input:focus, select:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
 
-        .footer-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-top: auto;
-        }
+    button {
+      background-color: #007BFF;
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .donation {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 14px;
-            color: #00ffaa;
-        }
+    button:hover {
+      background-color: #0056b3;
+    }
 
-        .donation a {
-            color: #00ffff;
-            text-decoration: underline;
-        }
-    </style>
+    .donation {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .donation a {
+      color: #007BFF;
+      text-decoration: underline;
+    }
+
+    .footer-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-top: auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="main-content">
-        <h2>Get Notified When a Slot Opens</h2>
-        <form action="/submit" method="POST">
-            <label for="name">Name:</label>
-            <input type="text" name="name" id="name" placeholder="Your full name" required>
+  <div class="main-content">
+    <h2>Get Notified When a Slot Opens</h2>
+    <form action="/submit" method="POST">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" placeholder="you@example.com" required>
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-            <label for="city">City:</label>
-            <select name="city" id="city" required>
-                <option value="">-- Select City --</option>
-                <option value="Hamburg">Hamburg</option>
-                <option value="Berlin">Berlin</option>
-            </select>
+      <label for="city">City:</label>
+      <select name="city" id="city" required>
+        <option value="">-- Select City --</option>
+        <option value="Hamburg">Hamburg</option>
+        <option value="Berlin">Berlin</option>
+      </select>
 
-            <label for="service">Service:</label>
-            <select name="service" id="service" required>
-                <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-            </select>
+      <label for="service">Service:</label>
+      <select name="service" id="service" required>
+        <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
+      </select>
 
-            <button type="submit">Subscribe</button>
+      <button type="submit">Subscribe</button>
 
-            <div class="donation">
-                If you find this helpful and would like to support us, you can check our
-                <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
-            </div>
-        </form>
-    </div>
+      <div class="donation">
+        If you find this helpful and would like to support us,<br>
+        you can check our
+        <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
+      </div>
+    </form>
+  </div>
 
-    <img src="{{ url_for('static', filename='sleep.webp') }}" alt="Sleeping Illustration" class="footer-image">
+  <img src="{{ url_for('static', filename='sleep.webp') }}" alt="Sleeping Illustration" class="footer-image">
 </body>
 </html>
