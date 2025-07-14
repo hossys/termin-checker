@@ -21,6 +21,11 @@
             justify-content: center;
         }
 
+        .scale-wrapper {
+            transform: scale(0.85);
+            transform-origin: top center;
+        }
+
         .container {
             display: flex;
             background-color: #fff;
@@ -87,6 +92,10 @@
         }
 
         @media (max-width: 768px) {
+            .scale-wrapper {
+                transform: none;
+            }
+
             .container {
                 flex-direction: column;
             }
@@ -102,24 +111,26 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="image-box">
-            <img src="{{ url_for('static', filename='after.webp') }}" alt="Thank You">
-        </div>
-        <div class="text-box">
-            {% if duplicate %}
-                <h2>You’re already subscribed.</h2>
-                <p>The email <span class="highlight">{{ email }}</span> is already on our list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-                <p>We’ll notify you as soon as an appointment becomes available.</p>
-            {% else %}
-                <h2>Thank you, {{ name }}!</h2>
-                <p>We've added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-                <p>You’ll receive an alert when a slot becomes available.</p>
-            {% endif %}
+    <div class="scale-wrapper">
+        <div class="container">
+            <div class="image-box">
+                <img src="{{ url_for('static', filename='after.webp') }}" alt="Thank You">
+            </div>
+            <div class="text-box">
+                {% if duplicate %}
+                    <h2>You’re already subscribed.</h2>
+                    <p>The email <span class="highlight">{{ email }}</span> is already on our list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
+                    <p>We’ll notify you as soon as an appointment becomes available.</p>
+                {% else %}
+                    <h2>Thank you, {{ name }}!</h2>
+                    <p>We've added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
+                    <p>You’ll receive an alert when a slot becomes available.</p>
+                {% endif %}
 
-            <div class="donation">
-                Want to support this project? You can check out our
-                <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Amazon Wish List</a>.
+                <div class="donation">
+                    Want to support this project? You can check out our
+                    <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Amazon Wish List</a>.
+                </div>
             </div>
         </div>
     </div>
