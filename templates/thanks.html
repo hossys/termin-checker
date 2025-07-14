@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Thank You – Termin Notify</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Orbitron', 'Share Tech Mono', monospace;
-            background-color: #0f0f0f;
-            color: #00ffcc;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -17,39 +18,41 @@
         }
 
         .box {
-            background-color: #1a1a1a;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px #00ffcc55;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             max-width: 500px;
             width: 100%;
             text-align: center;
         }
 
         h2 {
-            color: #00ffff;
+            color: #007BFF;
             font-size: 24px;
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
         p {
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1.6;
             margin: 10px 0;
         }
 
         .highlight {
-            color: #ffffff;
-            font-weight: bold;
+            color: #000;
+            font-weight: 600;
         }
 
         .donation {
             margin-top: 30px;
-            font-size: 14px;
-            color: #00ffaa;
+            font-size: 13px;
+            color: #666;
         }
 
         .donation a {
-            color: #00ffff;
+            color: #007BFF;
             text-decoration: underline;
         }
     </style>
@@ -59,15 +62,15 @@
         {% if duplicate %}
             <h2>You’re already subscribed.</h2>
             <p>The email <span class="highlight">{{ email }}</span> is already on our list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-            <p>Please wait — we’ll notify you as soon as an appointment becomes available.</p>
+            <p>We’ll notify you as soon as an appointment becomes available.</p>
         {% else %}
             <h2>Thank you, {{ name }}!</h2>
             <p>We've added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-            <p>You’ll get an alert when a slot becomes available.</p>
+            <p>You’ll receive an alert when a slot becomes available.</p>
         {% endif %}
 
         <div class="donation">
-            If you’d like to support this project, feel free to check our
+            Want to support this project? You can check out our
             <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Amazon Wish List</a>.
         </div>
     </div>
