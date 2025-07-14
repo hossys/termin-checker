@@ -21,6 +21,11 @@
       justify-content: center;
     }
 
+    .scale-wrapper {
+      transform: scale(0.85); /* کاهش اندازه کل محتوای فرم + عکس */
+      transform-origin: top center;
+    }
+
     .container {
       display: flex;
       background-color: #fff;
@@ -116,6 +121,10 @@
     }
 
     @media (max-width: 768px) {
+      .scale-wrapper {
+        transform: none; /* در موبایل scale نکن چون کوچیکه خودش */
+      }
+
       .container {
         flex-direction: column;
       }
@@ -131,40 +140,42 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="image-box">
-      <img src="{{ url_for('static', filename='before.webp') }}" alt="Sad Illustration">
-    </div>
-    <div class="form-box">
-      <form action="/submit" method="POST">
-        <h2>Get Notified When a Slot Opens</h2>
+  <div class="scale-wrapper">
+    <div class="container">
+      <div class="image-box">
+        <img src="{{ url_for('static', filename='before.webp') }}" alt="Sad Illustration">
+      </div>
+      <div class="form-box">
+        <form action="/submit" method="POST">
+          <h2>Get Notified When a Slot Opens</h2>
 
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" placeholder="Your full name" required>
+          <label for="name">Name:</label>
+          <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="you@example.com" required>
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-        <label for="city">City:</label>
-        <select name="city" id="city" required>
-          <option value="">-- Select City --</option>
-          <option value="Hamburg">Hamburg</option>
-          <option value="Berlin">Berlin</option>
-        </select>
+          <label for="city">City:</label>
+          <select name="city" id="city" required>
+            <option value="">-- Select City --</option>
+            <option value="Hamburg">Hamburg</option>
+            <option value="Berlin">Berlin</option>
+          </select>
 
-        <label for="service">Service:</label>
-        <select name="service" id="service" required>
-          <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-        </select>
+          <label for="service">Service:</label>
+          <select name="service" id="service" required>
+            <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
+          </select>
 
-        <button type="submit">Subscribe</button>
+          <button type="submit">Subscribe</button>
 
-        <div class="donation">
-          If you find this helpful and would like to support us,<br>
-          you can check our
-          <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
-        </div>
-      </form>
+          <div class="donation">
+            If you find this helpful and would like to support us,<br>
+            you can check our
+            <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </body>
