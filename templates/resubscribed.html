@@ -21,37 +21,28 @@
     .container {
       display: flex;
       flex-direction: row;
-      background-color: #fff;
+      background-color: #ffffff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       border-radius: 16px;
       overflow: hidden;
-      max-width: 900px;
-      margin: 30px auto;
+      max-width: 880px;
+      margin: 40px auto;
       width: 90%;
     }
 
     .image-box {
       flex: 1;
-      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      position: relative;
-      height: 360px;
+      background-color: #fefefe;
     }
 
     .image-box img {
-      max-height: 100%;
       max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
-      transform: scale(1.1);
     }
 
     .form-box {
@@ -100,13 +91,8 @@
       }
 
       .image-box {
-        order: -1;
-        padding: 15px 20px 0;
         height: 200px;
-      }
-
-      .image-box img {
-        transform: scale(1);
+        padding: 20px 10px;
       }
     }
   </style>
