@@ -6,6 +6,7 @@ import sqlite3
 import os
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -21,10 +22,12 @@ city_config = {
 }
 
 def log(text):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(text + "\n")
+        f.write(f"[{timestamp}] {text}\n")
 
 def check_available(city_key):
+    log(f"🔍 Checking appointments for city: {city_key}")
     city = city_config.get(city_key)
     if not city:
         log(f"❌ Invalid city key: {city_key}")
@@ -34,7 +37,7 @@ def check_available(city_key):
     try:
         response = requests.get(url, timeout=10)
         if response.status_code != 200:
-            log(f"❌ Failed to fetch {url} - Status code: {response.status_code}")
+            log(f"❌ Failed to fetch {url} – Status code: {response.status_code}")
             return None
     except Exception as e:
         log(f"❌ Exception during request to {url}: {e}")
@@ -111,15 +114,17 @@ Terminotify Team
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
             server.send_message(message)
-        log(f"✅ Email sent to {to_email}")
+        log(f"📧 Email sent to {to_email}")
     except Exception as e:
         log(f"❌ Error sending email to {to_email}: {str(e)}")
 
 if __name__ == "__main__":
+    log("🚀 --- Cron run started ---")
     city_key = "hamburg"
     link = check_available(city_key)
     if link:
         for office in city_config[city_key]["offices"]:
             notify_all_subscribers(city_key.capitalize(), office, link)
     else:
-        log("❌ No appointments available.")
+        log("ℹ️ No available appointments.")
+    log("✅ --- Cron run finished ---\n")
