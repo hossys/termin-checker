@@ -94,41 +94,39 @@ def send_confirmation_email(name, to_email, city, office, duplicate):
     resubscribe_link = f"{DOMAIN}/resubscribe?{urlencode({'email': to_email, 'city': city, 'office': office, 'name': name})}"
 
     if duplicate:
-        subject = "You’re already subscribed"
-        body = f"""Hi {name},
+        subject = "You're already subscribed – Termin Notify"
+        body = f"""
+        <p>Hi {name},</p>
 
-You're already on our notification list for {office} appointments in {city}.
-We’ll notify you as soon as something opens up.
+        <p>You're already on our list for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📝<br>
+        We'll keep an eye out and let you know when a spot opens!</p>
 
-If you'd like to support the project, here’s the wishlist: {WISHLIST_URL}
+        <p>If you'd like to make our day, check out our <a href="{WISHLIST_URL}">wishlist</a>. 🎁</p>
 
-To unsubscribe from this service, click here: {unsubscribe_link}
+        <p>Want to unsubscribe? No hard feelings — just <a href="{unsubscribe_link}">click here</a>.</p>
 
-Cheers,  
-Termin Checker Team
-"""
+        <p>Cheers,<br>Termin Checker Team</p>
+        """
     else:
-        subject = "You're subscribed – We'll notify you"
-        body = f"""Hi {name},
+        subject = "You're on the list! 🎉 – Termin Notify"
+        body = f"""
+        <p>Hi {name},</p>
 
-Thanks for signing up!
+        <p>Thanks for signing up! You're now subscribed to notifications for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📬<br>
+        We'll ping you when something pops up!</p>
 
-We’ve added you to the list for {office} appointments in {city}.
-We’ll notify you when there’s an available slot.
+        <p>You can support us by checking out our <a href="{WISHLIST_URL}">wishlist</a>. 🙌</p>
 
-You can support the project by checking out the wishlist: {WISHLIST_URL}
+        <p>Changed your mind? You can <a href="{unsubscribe_link}">unsubscribe here</a>.</p>
 
-To unsubscribe from this service, click here: {unsubscribe_link}
-
-Cheers,  
-Termin Checker Team
-"""
+        <p>Cheers,<br>Termin Checker Team</p>
+        """
 
     message = MIMEMultipart()
     message['From'] = sender_email
     message['To'] = to_email
     message['Subject'] = subject
-    message.attach(MIMEText(body, 'plain'))
+    message.attach(MIMEText(body, 'html'))
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
