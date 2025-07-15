@@ -32,25 +32,24 @@
 
     .image-box {
       flex: 1;
-      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
       position: relative;
-      aspect-ratio: 512 / 390;
+      aspect-ratio: 353 / 512;
     }
 
     .image-box img {
-  width: 353px;
-  height: 512px;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  transition: opacity 0.6s ease-in-out;
-}
+      width: 353px;
+      height: 512px;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
 
     .image-box img.active {
       opacity: 1;
