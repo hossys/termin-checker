@@ -51,6 +51,7 @@
       left: 0;
       right: 0;
       margin: auto;
+      transform: scale(1.1);
     }
 
     .form-box {
@@ -64,7 +65,7 @@
 
     h2 {
       color: #222;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       font-weight: 600;
       font-size: 22px;
     }
@@ -72,12 +73,12 @@
     p {
       font-size: 15px;
       color: #444;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
-    a.button {
+    .button {
       display: inline-block;
-      margin-top: 10px;
+      margin: 8px;
       padding: 10px 16px;
       background-color: #007BFF;
       color: white;
@@ -87,7 +88,7 @@
       transition: background-color 0.3s ease;
     }
 
-    a.button:hover {
+    .button:hover {
       background-color: #0056b3;
     }
 
@@ -103,20 +104,25 @@
         padding: 15px 20px 0;
         height: 180px;
       }
+
+      .image-box img {
+        transform: scale(1);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="image-box">
-      <img src="{{ url_for('static', filename='before.webp') }}" alt="Re-Subscribed">
+      <img src="{{ url_for('static', filename='after.webp') }}" alt="You're back!">
     </div>
     <div class="form-box">
       <h2>You’re back on the list!</h2>
-      <p>You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>. We’ll notify you as soon as an appointment is available.</p>
+      <p>You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.<br>
+      We’ll notify you as soon as a slot opens. 🎉</p>
 
-      <a class="button" href="/">Back to Homepage</a><br>
-      <a class="button" href="{{ wishlist_url }}" target="_blank">See our Wish List</a>
+      <a class="button" href="/">Back to Homepage</a>
+      <a class="button" href="{{ wishlist_url }}" target="_blank">Wish List</a>
     </div>
   </div>
 </body>
