@@ -36,7 +36,7 @@
 
     .image-box {
       flex: 1;
-      background-color: #fff; /* هم‌رنگ با container */
+      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -85,6 +85,7 @@
     .donation a {
       color: #007BFF;
       text-decoration: underline;
+      font-weight: 600;
     }
 
     @media (max-width: 768px) {
@@ -95,7 +96,6 @@
       .container {
         flex-direction: column;
         margin: 20px auto;
-        border-radius: 16px;
       }
 
       .image-box img {
@@ -117,15 +117,16 @@
       {% if duplicate %}
         <h2>You’re already subscribed.</h2>
         <p>The email <span class="highlight">{{ email }}</span> is already on our list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-        <p>We’ll notify you as soon as an appointment becomes available.</p>
+        <p>Please stay calm — we will notify you as soon as an appointment becomes available.</p>
       {% else %}
         <h2>Thank you, {{ name }}!</h2>
-        <p>We've added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
-        <p>You’ll receive an alert when a slot becomes available.</p>
+        <p>We’ve added <span class="highlight">{{ email }}</span> to the notification list for <span class="highlight">{{ office }}</span> in <span class="highlight">{{ city }}</span>.</p>
+        <p>You can relax now. We’ll notify you as soon as a slot becomes available.</p>
       {% endif %}
 
       <div class="donation">
-        Want to support this project? You can check out our
+        If you find this helpful and would like to support us,<br>
+        you can check our
         <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Amazon Wish List</a>.
       </div>
     </div>
