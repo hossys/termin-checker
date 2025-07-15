@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Termin Notify</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
@@ -32,30 +32,36 @@
 
     .image-box {
       flex: 1;
-      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
       position: relative;
-      height: 360px;
+      height: 250px;
+      margin-top: 0;
+    }
+
+    @media (min-width: 769px) {
+      .image-box {
+        margin-top: 30px;
+      }
     }
 
     .image-box img {
+      width: 100px;
+      height: auto;
       max-height: 100%;
-      width: auto;
       object-fit: contain;
       position: absolute;
       top: 0;
       left: 0;
+      transition: opacity 0.3s ease-in-out;
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      z-index: 1;
     }
 
     .image-box img.active {
       opacity: 1;
       z-index: 2;
-      position: relative;
     }
 
     .form-box {
@@ -152,12 +158,8 @@
 
       .image-box {
         order: -1;
-        padding: 15px 20px 0;
         height: 180px;
-      }
-
-      .image-box img {
-        max-height: 100%;
+        margin-top: 0;
       }
 
       .form-box {
@@ -249,14 +251,10 @@
 
       const result = await response.json();
 
-      // hide form
       form.style.display = 'none';
-
-      // change image
       document.getElementById('img-before').classList.remove('active');
       document.getElementById('img-after').classList.add('active');
 
-      // personalize message
       let title = `Thanks, ${name}!`;
       let message = "";
 
