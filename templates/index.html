@@ -23,7 +23,7 @@
       flex-direction: row;
       background-color: #fff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      border-radius: 16px; /* گرد کردن همه گوشه‌ها */
+      border-radius: 16px;
       overflow: hidden;
       max-width: 900px;
       margin: 30px auto;
@@ -32,17 +32,26 @@
 
     .image-box {
       flex: 1;
-      background-color: transparent;
+      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      position: relative;
     }
 
     .image-box img {
       max-width: 100%;
       max-height: 360px;
       object-fit: contain;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .image-box img.active {
+      opacity: 1;
+      position: relative;
     }
 
     .form-box {
@@ -115,60 +124,67 @@
       text-decoration: underline;
       font-weight: 600;
     }
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    margin: 20px auto;
-    border-radius: 16px;
-  }
 
-  .image-box {
-    order: -1;
-    display: flex;
-    justify-content: center;
-    padding: 15px 20px 0;
-  }
+    .thank-you-message {
+      display: none;
+      text-align: center;
+      font-size: 16px;
+      padding: 10px;
+    }
 
-  .image-box img {
-    max-height: 180px;
-  }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        margin: 20px auto;
+        border-radius: 16px;
+      }
 
-  .form-box {
-    padding: 20px;
-  }
+      .image-box {
+        order: -1;
+        padding: 15px 20px 0;
+      }
 
-  h2 {
-    font-size: 20px;
-  }
+      .image-box img {
+        max-height: 180px;
+      }
 
-  input, select, button {
-    font-size: 15px;
-    padding: 12px;
-    margin-bottom: 11px;
-  }
+      .form-box {
+        padding: 20px;
+      }
 
-  label {
-    margin-top: 5px;
-  }
+      h2 {
+        font-size: 20px;
+      }
 
-  .donation {
-    font-size: 15px;
-    margin-top: 18px;
-  }
+      input, select, button {
+        font-size: 15px;
+        padding: 12px;
+        margin-bottom: 11px;
+      }
 
-  body {
-    zoom: 0.80;
-  }
-}
+      label {
+        margin-top: 5px;
+      }
+
+      .donation {
+        font-size: 15px;
+        margin-top: 18px;
+      }
+
+      body {
+        zoom: 0.80;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="image-box">
-      <img src="{{ url_for('static', filename='before.webp') }}" alt="Sad Illustration">
+      <img id="img-before" src="{{ url_for('static', filename='before.webp') }}" alt="Sad" class="active">
+      <img id="img-after" src="{{ url_for('static', filename='after.webp') }}" alt="Happy">
     </div>
-    <div class="form-box">
-      <form action="/submit" method="POST">
+    <div class="form-box" id="form-box">
+      <form id="subscribe-form">
         <h2>Get Notified When a Slot Opens</h2>
 
         <label for="name">Name:</label>
@@ -197,7 +213,27 @@
           <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
         </div>
       </form>
+      <div class="thank-you-message" id="thank-you">
+        <h2>Thank you!</h2>
+        <p>You’ll receive a notification as soon as a slot becomes available.</p>
+      </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById('subscribe-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // hide form
+      document.getElementById('subscribe-form').style.display = 'none';
+
+      // fade transition
+      document.getElementById('img-before').classList.remove('active');
+      document.getElementById('img-after').classList.add('active');
+
+      // show thank you message
+      document.getElementById('thank-you').style.display = 'block';
+    });
+  </script>
 </body>
 </html>
