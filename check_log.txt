@@ -1,0 +1,198 @@
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+ℹ️ Page contains 'voll' – no appointments.
+❌ No appointments available.
+[2025-07-15 07:12:01] 🚀 --- Cron run started ---
+[2025-07-15 07:12:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:12:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:12:02] ℹ️ No available appointments.
+[2025-07-15 07:12:02] ✅ --- Cron run finished ---
+
+[2025-07-15 07:13:01] 🚀 --- Cron run started ---
+[2025-07-15 07:13:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:13:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:13:02] ℹ️ No available appointments.
+[2025-07-15 07:13:02] ✅ --- Cron run finished ---
+
+[2025-07-15 07:14:02] 🚀 --- Cron run started ---
+[2025-07-15 07:14:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:14:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:14:02] ℹ️ No available appointments.
+[2025-07-15 07:14:02] ✅ --- Cron run finished ---
+
+[2025-07-15 07:15:02] 🚀 --- Cron run started ---
+[2025-07-15 07:15:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:15:03] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:15:03] ℹ️ No available appointments.
+[2025-07-15 07:15:03] ✅ --- Cron run finished ---
+
+[2025-07-15 07:20:01] 🚀 --- Cron run started ---
+[2025-07-15 07:20:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:20:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:20:02] ℹ️ No available appointments.
+[2025-07-15 07:20:02] ✅ --- Cron run finished ---
+
+[2025-07-15 07:40:01] 🚀 --- Cron run started ---
+[2025-07-15 07:40:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 07:40:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 07:40:02] ℹ️ No available appointments.
+[2025-07-15 07:40:02] ✅ --- Cron run finished ---
+
+[2025-07-15 08:00:02] 🚀 --- Cron run started ---
+[2025-07-15 08:00:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 08:00:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 08:00:02] ℹ️ No available appointments.
+[2025-07-15 08:00:02] ✅ --- Cron run finished ---
+
+[2025-07-15 08:20:02] 🚀 --- Cron run started ---
+[2025-07-15 08:20:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 08:20:03] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 08:20:03] ℹ️ No available appointments.
+[2025-07-15 08:20:03] ✅ --- Cron run finished ---
+
+[2025-07-15 08:40:01] 🚀 --- Cron run started ---
+[2025-07-15 08:40:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 08:40:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 08:40:02] ℹ️ No available appointments.
+[2025-07-15 08:40:02] ✅ --- Cron run finished ---
+
+[2025-07-15 09:00:02] 🚀 --- Cron run started ---
+[2025-07-15 09:00:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 09:00:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 09:00:02] ℹ️ No available appointments.
+[2025-07-15 09:00:02] ✅ --- Cron run finished ---
+
+[2025-07-15 09:20:01] 🚀 --- Cron run started ---
+[2025-07-15 09:20:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 09:20:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 09:20:02] ℹ️ No available appointments.
+[2025-07-15 09:20:02] ✅ --- Cron run finished ---
+
+[2025-07-15 09:40:01] 🚀 --- Cron run started ---
+[2025-07-15 09:40:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 09:40:02] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 09:40:02] ℹ️ No available appointments.
+[2025-07-15 09:40:02] ✅ --- Cron run finished ---
+
+[2025-07-15 10:00:02] 🚀 --- Cron run started ---
+[2025-07-15 10:00:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 10:00:03] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 10:00:03] ℹ️ No available appointments.
+[2025-07-15 10:00:03] ✅ --- Cron run finished ---
+
+[2025-07-15 10:20:01] 🚀 --- Cron run started ---
+[2025-07-15 10:20:01] 🔍 Checking appointments for city: hamburg
+[2025-07-15 10:20:03] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 10:20:03] ℹ️ No available appointments.
+[2025-07-15 10:20:03] ✅ --- Cron run finished ---
+
+[2025-07-15 10:40:02] 🚀 --- Cron run started ---
+[2025-07-15 10:40:02] 🔍 Checking appointments for city: hamburg
+[2025-07-15 10:40:03] ℹ️ Page contains 'voll' – no appointments.
+[2025-07-15 10:40:03] ℹ️ No available appointments.
+[2025-07-15 10:40:03] ✅ --- Cron run finished ---
+
