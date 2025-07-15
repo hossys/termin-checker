@@ -52,29 +52,42 @@ def submit():
     cursor.execute("SELECT unsubscribed FROM subscribers WHERE email=? AND city=? AND office=?", (email, city, office))
     result = cursor.fetchone()
 
-    is_duplicate = result is not None
-    is_unsubscribed = result and result[0] == 1
-
-    if is_unsubscribed:
-        return jsonify({
-            "status": "unsubscribed",
-            "message": "You have previously unsubscribed from this service."
-        })
-
-    if not is_duplicate:
+    if result:
+        if result[0] == 1:
+            # اگر قبلاً انسابسکرایب کرده، دوباره فعال کن
+            cursor.execute("""
+                UPDATE subscribers 
+                SET unsubscribed = 0, name = ?, city = ?, office = ?
+                WHERE email = ? AND city = ? AND office = ?
+            """, (name, city, office, email, city, office))
+            conn.commit()
+            conn.close()
+            send_confirmation_email(name, email, city, office, duplicate=False)
+            return jsonify({
+                "status": "resubscribed",
+                "message": "You’ve been re-subscribed! We’ll notify you when there's a slot."
+            })
+        else:
+            # قبلاً سابسکرایب بوده
+            conn.close()
+            send_confirmation_email(name, email, city, office, duplicate=True)
+            return jsonify({
+                "status": "duplicate",
+                "message": "You're already on the list. We’ll notify you when there's a slot."
+            })
+    else:
+        # کاربر جدید
         cursor.execute("""
             INSERT INTO subscribers (name, email, city, office) VALUES (?, ?, ?, ?)
         """, (name, email, city, office))
         conn.commit()
+        conn.close()
 
-    conn.close()
-
-    send_confirmation_email(name, email, city, office, duplicate=is_duplicate)
-
-    return jsonify({
-        "status": "duplicate" if is_duplicate else "success",
-        "message": "You're already on the list. We’ll notify you when there's a slot." if is_duplicate else "You’ve been subscribed! We’ll notify you when there's a slot."
-    })
+        send_confirmation_email(name, email, city, office, duplicate=False)
+        return jsonify({
+            "status": "success",
+            "message": "You’ve been subscribed! We’ll notify you when there's a slot."
+        })
 
 def send_confirmation_email(name, to_email, city, office, duplicate):
     sender_email = os.getenv('EMAIL_USER')
