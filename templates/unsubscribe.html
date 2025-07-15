@@ -65,23 +65,17 @@
     p {
       font-size: 15px;
       color: #555;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
-    .button {
-      display: inline-block;
-      margin: 6px 8px;
-      padding: 10px 16px;
-      background-color: #007bff;
-      color: white;
+    a {
+      color: #007bff;
       text-decoration: none;
       font-weight: 600;
-      border-radius: 6px;
-      transition: background-color 0.3s ease;
     }
 
-    .button:hover {
-      background-color: #0056b3;
+    a:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 768px) {
@@ -104,8 +98,8 @@
     <div class="text-box">
       <h2>You’ve been unsubscribed</h2>
       <p>You will no longer receive notifications for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.</p>
-      <a href="/" class="button">Back to Subscription</a>
-      <a href="{{ wishlist_url }}" class="button" target="_blank">View Wish List</a>
+      <p>Want to get notifications again? <a href="/">Resubscribe here</a>.</p>
+      <p>Curious about our favorite tools? <a href="{{ wishlist_url }}" target="_blank">Check out our Wish List</a>.</p>
     </div>
   </div>
 </body>
