@@ -23,7 +23,7 @@
       flex-direction: row;
       background-color: #fff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      border-radius: 12px;
+      border-radius: 16px; /* گرد کردن همه گوشه‌ها */
       overflow: hidden;
       max-width: 900px;
       margin: 30px auto;
@@ -67,14 +67,14 @@
 
     label {
       font-size: 14px;
-      margin-top: 8px;
+      margin-top: 6px;
       display: block;
       font-weight: 500;
     }
 
     input, select, button {
-      margin-top: 5px;
-      margin-bottom: 13px;
+      margin-top: 4px;
+      margin-bottom: 12px;
       padding: 11px;
       width: 100%;
       border: 1px solid #ccc;
@@ -102,7 +102,7 @@
     }
 
     .donation {
-      margin-top: 24px;
+      margin-top: 20px;
       text-align: center;
       font-size: 15px;
       font-weight: 500;
@@ -120,18 +120,18 @@
       .container {
         flex-direction: column;
         margin: 20px auto;
-        border-radius: 12px;
+        border-radius: 16px; /* حفظ گردی در موبایل */
       }
 
       .image-box {
         order: -1;
         display: flex;
         justify-content: center;
-        padding: 20px 20px 0;
+        padding: 15px 20px 0;
       }
 
       .image-box img {
-        max-height: 180px;
+        max-height: 180px; /* ۱۰٪ کمتر */
       }
 
       .form-box {
@@ -144,17 +144,17 @@
 
       input, select, button {
         font-size: 15px;
-        padding: 13px;
-        margin-bottom: 11px;
+        padding: 12px;
+        margin-bottom: 11px; /* کمی کمتر از قبل */
       }
 
       label {
-        margin-top: 6px;
+        margin-top: 5px;
       }
 
       .donation {
         font-size: 15px;
-        margin-top: 20px;
+        margin-top: 18px;
       }
     }
   </style>
