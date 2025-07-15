@@ -103,7 +103,6 @@ We’ll notify you as soon as something opens up.
 If you'd like to support the project, here’s the wishlist: {WISHLIST_URL}
 
 To unsubscribe from this service, click here: {unsubscribe_link}
-To re-subscribe (if unsubscribed), click here: {resubscribe_link}
 
 Cheers,  
 Termin Checker Team
@@ -120,7 +119,6 @@ We’ll notify you when there’s an available slot.
 You can support the project by checking out the wishlist: {WISHLIST_URL}
 
 To unsubscribe from this service, click here: {unsubscribe_link}
-To re-subscribe (if unsubscribed), click here: {resubscribe_link}
 
 Cheers,  
 Termin Checker Team
