@@ -43,7 +43,7 @@
 
     .image-box img {
       max-height: 100%;
-      width: auto;
+      max-width: 100%;
       object-fit: contain;
       position: absolute;
       top: 0;
@@ -102,7 +102,7 @@
       .image-box {
         order: -1;
         padding: 15px 20px 0;
-        height: 180px;
+        height: 200px;
       }
 
       .image-box img {
@@ -121,7 +121,6 @@
       <p>You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.<br>
       We’ll notify you as soon as a slot opens. 🎉</p>
 
-      <a class="button" href="/">Back to Homepage</a>
       <a class="button" href="{{ wishlist_url }}" target="_blank">Wish List</a>
     </div>
   </div>
