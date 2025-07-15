@@ -54,7 +54,6 @@ def submit():
 
     if result:
         if result[0] == 1:
-            # اگر قبلاً انسابسکرایب کرده، دوباره فعال کن
             cursor.execute("""
                 UPDATE subscribers 
                 SET unsubscribed = 0, name = ?, city = ?, office = ?
@@ -68,7 +67,6 @@ def submit():
                 "message": "You’ve been re-subscribed! We’ll notify you when there's a slot."
             })
         else:
-            # قبلاً سابسکرایب بوده
             conn.close()
             send_confirmation_email(name, email, city, office, duplicate=True)
             return jsonify({
@@ -76,7 +74,6 @@ def submit():
                 "message": "You're already on the list. We’ll notify you when there's a slot."
             })
     else:
-        # کاربر جدید
         cursor.execute("""
             INSERT INTO subscribers (name, email, city, office) VALUES (?, ?, ?, ?)
         """, (name, email, city, office))
@@ -156,8 +153,7 @@ def unsubscribe():
     conn.commit()
     conn.close()
 
-    return f"""<h2>You’ve been unsubscribed.</h2>
-<p>You’ll no longer receive notifications for {office} in {city}.</p>"""
+    return render_template("unsubscribe.html", city=city, office=office, wishlist_url=WISHLIST_URL)
 
 def log(text):
     with open("test_log.txt", "a") as f:
