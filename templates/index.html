@@ -1,49 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Termin Notify</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terminotify</title>
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    body {
+      font-family: sans-serif;
+      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
     }
 
     .container {
       display: flex;
-      flex-direction: row;
-      background-color: #fff;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      border-radius: 16px;
+      justify-content: center;
+      align-items: center;
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 24px;
       overflow: hidden;
-      max-width: 900px;
-      margin: 30px auto;
-      width: 90%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
     .image-box {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      padding: 24px;
+      aspect-ratio: 390 / 512;
       position: relative;
-      aspect-ratio: 353 / 512;
+      flex: 1;
     }
 
     .image-box img {
       width: 353px;
       height: 512px;
-      object-fit: contain;
+      object-fit: cover;
       position: absolute;
       top: 0;
       left: 0;
@@ -59,105 +54,61 @@
 
     .form-box {
       flex: 1;
-      padding: 30px 25px;
+      padding: 32px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-    }
-
-    form {
-      width: 100%;
     }
 
     h2 {
-      color: #222;
-      margin-bottom: 22px;
+      font-size: 24px;
+      margin-bottom: 16px;
       text-align: center;
-      font-weight: 600;
-      font-size: 22px;
     }
 
     label {
       font-size: 14px;
-      margin-top: 6px;
-      display: block;
-      font-weight: 500;
+      margin-top: 8px;
     }
 
     input, select, button {
-      margin-top: 4px;
-      margin-bottom: 12px;
-      padding: 11px;
-      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      font-size: 16px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      background-color: #fff;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    input:focus, select:focus {
-      border-color: #007BFF;
-      outline: none;
     }
 
     button {
-      background-color: #007BFF;
+      background-color: #2c80ff;
       color: white;
-      font-weight: 600;
-      border: none;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
 
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .donation {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 15px;
-      font-weight: 500;
-      color: #444;
-      padding-bottom: 10px;
-    }
-
-    .donation a {
-      color: #007BFF;
-      text-decoration: underline;
-      font-weight: 600;
-    }
-
-    .thank-you-message {
-      display: none;
+    .message {
       text-align: center;
       font-size: 16px;
-      padding: 10px;
-      transition: opacity 0.5s ease-in-out;
-      opacity: 0;
-    }
-
-    .thank-you-message.show {
-      display: block;
-      opacity: 1;
-    }
-
-    .loader-message {
-      text-align: center;
-      font-weight: 500;
-      padding: 10px 0;
+      margin-top: 16px;
     }
 
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
-        margin: 20px auto;
+        margin: 20px;
         border-radius: 16px;
       }
 
       .image-box {
         order: -1;
-        padding: 15px 20px 0;
+        padding: 10px;
+        aspect-ratio: auto;
+        height: auto;
+      }
+
+      .image-box img {
+        position: relative;
+        width: 150px;
+        height: auto;
+        margin: 0 auto;
       }
 
       .form-box {
@@ -192,94 +143,62 @@
 <body>
   <div class="container">
     <div class="image-box">
-      <img id="img-before" src="{{ url_for('static', filename='before.webp') }}" alt="Before" class="active">
-      <img id="img-after" src="{{ url_for('static', filename='after.webp') }}" alt="After">
+      <img id="before-image" class="active" src="before.webp" alt="Before" />
+      <img id="after-image" src="after.webp" alt="After" />
     </div>
-    <div class="form-box" id="form-box">
-      <form id="subscribe-form">
-        <h2>Get Notified When a Slot Opens</h2>
+    <div class="form-box">
+      <h2>Get Notified When a Slot Opens</h2>
+      <form id="notify-form">
+        <label>Name:</label>
+        <input type="text" id="name" required />
 
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" placeholder="Your full name" required>
+        <label>Email:</label>
+        <input type="email" id="email" required />
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="you@example.com" required>
-
-        <label for="city">City:</label>
-        <select name="city" id="city" required>
-          <option value="">-- Select City --</option>
-          <option value="Hamburg">Hamburg</option>
-          <option value="Berlin">Berlin</option>
+        <label>City:</label>
+        <select id="city" required>
+          <option value="">-- Choose a city --</option>
+          <option value="hamburg">Hamburg</option>
+          <option value="berlin">Berlin</option>
+          <option value="munich">Munich</option>
         </select>
 
-        <label for="service">Service:</label>
-        <select name="service" id="service" required>
-          <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-        </select>
-
-        <button type="submit">Subscribe</button>
+        <button type="submit">Notify Me</button>
       </form>
-
-      <div class="loader-message" id="loader" style="display: none;">Submitting...</div>
-
-      <div class="thank-you-message" id="thank-you">
-        <h2 id="thank-title">Thank you!</h2>
-        <p id="thank-text"></p>
-      </div>
-
-      <div class="donation">
-        If you find this helpful and would like to support us,<br>
-        you can check our
-        <a href="{{ wishlist_url }}" target="_blank">Wish List</a>. Thank you!
-      </div>
+      <div class="message" id="message-box"></div>
     </div>
   </div>
 
   <script>
-    document.getElementById('subscribe-form').addEventListener('submit', async function (e) {
+    const form = document.getElementById("notify-form");
+    const messageBox = document.getElementById("message-box");
+    const beforeImage = document.getElementById("before-image");
+    const afterImage = document.getElementById("after-image");
+
+    let registeredUsers = [];
+
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const form = this;
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const formBox = document.getElementById('form-box');
-      const loader = document.getElementById('loader');
-      const thankYouDiv = document.getElementById('thank-you');
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const city = document.getElementById("city").value;
 
-      loader.style.display = 'block';
-      form.style.opacity = '0.5';
+      const existing = registeredUsers.find(
+        (entry) => entry.email === email && entry.city === city
+      );
 
-      const formData = new FormData(form);
-      const response = await fetch('/submit', {
-        method: 'POST',
-        body: formData
-      });
+      beforeImage.classList.remove("active");
+      afterImage.classList.add("active");
 
-      const result = await response.json();
-
-      form.style.display = 'none';
-      loader.style.display = 'none';
-
-      document.getElementById('img-before').classList.remove('active');
-      document.getElementById('img-after').classList.add('active');
-
-      let title = `Thanks, ${name}!`;
-      let message = "";
-
-      if (result.status === "duplicate") {
-        message = `We've already received your email (${email}) for this service. Sit tight – we'll notify you when a slot is available! 😊`;
-      } else if (result.status === "success") {
-        message = `We've saved your email (${email}) successfully. You’ll be notified as soon as a slot opens. 🚀`;
-      } else {
-        title = "Oops!";
-        message = result.message || "Something went wrong.";
-      }
-
-      message += "<br><br>Now sit back and relax – we got you! 🧘";
-
-      document.getElementById('thank-title').innerText = title;
-      document.getElementById('thank-text').innerHTML = message;
-      thankYouDiv.classList.add('show');
+      setTimeout(() => {
+        if (existing) {
+          messageBox.innerHTML = "You have already registered for this city. Please be patient — we will notify you!";
+        } else {
+          registeredUsers.push({ name, email, city });
+          messageBox.innerHTML = "Successfully registered! We will notify you as soon as a slot opens.";
+        }
+      }, 600);
     });
   </script>
 </body>
