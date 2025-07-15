@@ -45,12 +45,15 @@
       max-height: 360px;
       object-fit: contain;
       position: absolute;
+      top: 0;
+      left: 0;
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
 
     .image-box img.active {
       opacity: 1;
+      z-index: 2;
       position: relative;
     }
 
@@ -130,6 +133,13 @@
       text-align: center;
       font-size: 16px;
       padding: 10px;
+      transition: opacity 0.8s ease;
+      opacity: 0;
+    }
+
+    .thank-you-message.show {
+      display: block;
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
@@ -213,6 +223,7 @@
           <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
         </div>
       </form>
+
       <div class="thank-you-message" id="thank-you">
         <h2>Thank you!</h2>
         <p>You’ll receive a notification as soon as a slot becomes available.</p>
@@ -227,12 +238,12 @@
       // hide form
       document.getElementById('subscribe-form').style.display = 'none';
 
-      // fade transition
+      // transition image
       document.getElementById('img-before').classList.remove('active');
       document.getElementById('img-after').classList.add('active');
 
       // show thank you message
-      document.getElementById('thank-you').style.display = 'block';
+      document.getElementById('thank-you').classList.add('show');
     });
   </script>
 </body>
