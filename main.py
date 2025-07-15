@@ -158,6 +158,7 @@ def unsubscribe():
 @app.route('/resubscribe')
 def resubscribe():
     email = request.args.get('email', '').strip().lower()
+    name = request.args.get('name', '').strip()
     city = request.args.get('city', '').strip()
     office = request.args.get('office', '').strip()
 
@@ -167,8 +168,10 @@ def resubscribe():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        UPDATE subscribers SET unsubscribed = 0 WHERE email = ? AND city = ? AND office = ?
-    """, (email, city, office))
+        UPDATE subscribers 
+        SET unsubscribed = 0, name = ?
+        WHERE email = ? AND city = ? AND office = ?
+    """, (name, email, city, office))
     conn.commit()
     conn.close()
 
