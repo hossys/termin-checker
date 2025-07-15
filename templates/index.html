@@ -220,29 +220,48 @@
         <div class="donation">
           If you find this helpful and would like to support us,<br>
           you can check our
-          <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
+          <a href="{{ wishlist_url }}" target="_blank">Wish List</a>. Thank you!
         </div>
       </form>
 
       <div class="thank-you-message" id="thank-you">
-        <h2>Thank you!</h2>
-        <p>You’ll receive a notification as soon as a slot becomes available.</p>
+        <h2 id="thank-title">Thank you!</h2>
+        <p id="thank-text">You’ll receive a notification as soon as a slot becomes available.</p>
       </div>
     </div>
   </div>
 
   <script>
-    document.getElementById('subscribe-form').addEventListener('submit', function (e) {
+    document.getElementById('subscribe-form').addEventListener('submit', async function (e) {
       e.preventDefault();
+
+      const formData = new FormData(this);
+      const response = await fetch('/submit', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
 
       // hide form
       document.getElementById('subscribe-form').style.display = 'none';
 
-      // transition image
+      // change image
       document.getElementById('img-before').classList.remove('active');
       document.getElementById('img-after').classList.add('active');
 
-      // show thank you message
+      // set message based on duplicate or not
+      if (result.status === "duplicate") {
+        document.getElementById('thank-title').innerText = "You're already subscribed!";
+        document.getElementById('thank-text').innerText = result.message;
+      } else if (result.status === "success") {
+        document.getElementById('thank-title').innerText = "Thank you!";
+        document.getElementById('thank-text').innerText = result.message;
+      } else {
+        document.getElementById('thank-title').innerText = "Oops!";
+        document.getElementById('thank-text').innerText = result.message || "Something went wrong.";
+      }
+
       document.getElementById('thank-you').classList.add('show');
     });
   </script>
