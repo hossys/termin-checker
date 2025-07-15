@@ -153,7 +153,26 @@ def unsubscribe():
     conn.commit()
     conn.close()
 
-    return render_template("unsubscribe.html", city=city, office=office, wishlist_url=WISHLIST_URL)
+    return render_template("unsubscribe.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
+
+@app.route('/resubscribe')
+def resubscribe():
+    email = request.args.get('email', '').strip().lower()
+    city = request.args.get('city', '').strip()
+    office = request.args.get('office', '').strip()
+
+    if not email or not city or not office:
+        return "Missing parameters.", 400
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE subscribers SET unsubscribed = 0 WHERE email = ? AND city = ? AND office = ?
+    """, (email, city, office))
+    conn.commit()
+    conn.close()
+
+    return render_template("resubscribed.html", city=city, office=office)
 
 def log(text):
     with open("test_log.txt", "a") as f:
