@@ -91,6 +91,7 @@ def send_confirmation_email(name, to_email, city, office, duplicate):
     sender_password = os.getenv('EMAIL_PASS')
 
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
+    resubscribe_link = f"{DOMAIN}/resubscribe?{urlencode({'email': to_email, 'city': city, 'office': office, 'name': name})}"
 
     if duplicate:
         subject = "You’re already subscribed"
@@ -102,6 +103,7 @@ We’ll notify you as soon as something opens up.
 If you'd like to support the project, here’s the wishlist: {WISHLIST_URL}
 
 To unsubscribe from this service, click here: {unsubscribe_link}
+To re-subscribe (if unsubscribed), click here: {resubscribe_link}
 
 Cheers,  
 Termin Checker Team
@@ -118,6 +120,7 @@ We’ll notify you when there’s an available slot.
 You can support the project by checking out the wishlist: {WISHLIST_URL}
 
 To unsubscribe from this service, click here: {unsubscribe_link}
+To re-subscribe (if unsubscribed), click here: {resubscribe_link}
 
 Cheers,  
 Termin Checker Team
@@ -167,6 +170,14 @@ def resubscribe():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+
+    if not name:
+        cursor.execute("""
+            SELECT name FROM subscribers WHERE email = ? AND city = ? AND office = ?
+        """, (email, city, office))
+        row = cursor.fetchone()
+        name = row[0] if row else "Friend"
+
     cursor.execute("""
         UPDATE subscribers 
         SET unsubscribed = 0, name = ?
@@ -175,7 +186,8 @@ def resubscribe():
     conn.commit()
     conn.close()
 
-    return render_template("resubscribed.html", city=city, office=office)
+    send_confirmation_email(name, email, city, office, duplicate=False)
+    return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
 
 def log(text):
     with open("test_log.txt", "a") as f:
