@@ -98,8 +98,18 @@
     <div class="text-box">
       <h2>You’ve been unsubscribed</h2>
       <p>You will no longer receive notifications for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.</p>
-      <p>Want to get notifications again? <a href="/">Resubscribe here</a>.</p>
-      <p>Curious about our favorite tools? <a href="{{ wishlist_url }}" target="_blank">Check out our Wish List</a>.</p>
+
+      <p>
+        Want to get notifications again?
+        <a href="{{ url_for('resubscribe', email=email, name=name, office=office, city=city) }}">
+          Resubscribe here
+        </a>.
+      </p>
+
+      <p>
+        Curious about our favorite tools?
+        <a href="{{ wishlist_url }}" target="_blank">Check out our Wish List</a>.
+      </p>
     </div>
   </div>
 </body>
