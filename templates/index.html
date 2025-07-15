@@ -38,9 +38,12 @@
       justify-content: center;
       padding: 20px;
       position: relative;
+      height: 360px;
     }
 
     .image-box img {
+      max-height: 100%;
+      width: auto;
       object-fit: contain;
       position: absolute;
       top: 0;
@@ -150,6 +153,11 @@
       .image-box {
         order: -1;
         padding: 15px 20px 0;
+        height: 180px;
+      }
+
+      .image-box img {
+        max-height: 100%;
       }
 
       .form-box {
@@ -226,17 +234,6 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const beforeImg = document.getElementById("img-before");
-      const afterImg = document.getElementById("img-after");
-
-      // Match after image size to before image
-      afterImg.onload = () => {
-        afterImg.style.width = beforeImg.clientWidth + "px";
-        afterImg.style.height = beforeImg.clientHeight + "px";
-      };
-    });
-
     document.getElementById('subscribe-form').addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -252,11 +249,14 @@
 
       const result = await response.json();
 
+      // hide form
       form.style.display = 'none';
 
+      // change image
       document.getElementById('img-before').classList.remove('active');
       document.getElementById('img-after').classList.add('active');
 
+      // personalize message
       let title = `Thanks, ${name}!`;
       let message = "";
 
