@@ -26,7 +26,7 @@
       border-radius: 12px;
       overflow: hidden;
       max-width: 900px;
-      margin: 40px auto;
+      margin: 30px auto;
       width: 90%;
     }
 
@@ -47,7 +47,7 @@
 
     .form-box {
       flex: 1;
-      padding: 40px 30px;
+      padding: 30px 25px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -95,7 +95,7 @@
       border: none;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     button:hover {
@@ -105,11 +105,10 @@
     .donation {
       margin-top: 20px;
       text-align: center;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       color: #444;
-      padding-bottom: 10px;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
     .donation a {
@@ -121,24 +120,23 @@
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
-        margin: 20px auto;
+        margin: 15px auto;
       }
 
       .image-box {
         order: -1;
         display: flex;
         justify-content: center;
-        align-items: center;
-        padding: 10px 20px 0;
+        padding: 10px 0 5px;
       }
 
       .image-box img {
-        max-height: 150px;
-        margin-bottom: 10px;
+        max-height: 140px;
+        margin: 0 auto;
       }
 
       .form-box {
-        padding: 20px;
+        padding: 15px 20px;
       }
 
       h2 {
@@ -146,13 +144,22 @@
       }
 
       input, select, button {
-        font-size: 16px;
+        font-size: 15px;
         padding: 12px;
+        margin-bottom: 8px;
+      }
+
+      label {
+        margin-top: 8px;
+      }
+
+      button {
+        margin-top: 12px;
       }
 
       .donation {
-        font-size: 16px;
-        margin-top: 15px;
+        font-size: 15px;
+        margin-top: 16px;
       }
     }
   </style>
