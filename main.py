@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import os
 import smtplib
@@ -41,63 +41,58 @@ def submit():
     office = request.form.get('service')
 
     if not (name and email and city and office):
-        return redirect(url_for('index'))
+        return jsonify({"status": "error", "message": "All fields are required."})
 
-    log(f"Submit route reached for {name}, {email}, {city}, {office}")
+    log(f"Form submitted: {name}, {email}, {city}, {office}")
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT 1 FROM subscribers WHERE email=? AND city=? AND office=?
-    """, (email, city, office))
+    cursor.execute("SELECT 1 FROM subscribers WHERE email=? AND city=? AND office=?", (email, city, office))
     result = cursor.fetchone()
     is_duplicate = result is not None
 
     if not is_duplicate:
-        cursor.execute("""
-            INSERT INTO subscribers (name, email, city, office)
-            VALUES (?, ?, ?, ?)
-        """, (name, email, city, office))
+        cursor.execute("INSERT INTO subscribers (name, email, city, office) VALUES (?, ?, ?, ?)", (name, email, city, office))
         conn.commit()
 
     conn.close()
 
     send_confirmation_email(name, email, city, office, duplicate=is_duplicate)
-    return render_template('thanks.html', name=name, email=email, city=city, office=office, duplicate=is_duplicate, wishlist_url=WISHLIST_URL)
+
+    return jsonify({
+        "status": "duplicate" if is_duplicate else "success",
+        "message": "You're already on the list. We’ll notify you when there's a slot." if is_duplicate else "You’ve been subscribed! We’ll notify you when there's a slot."
+    })
 
 def send_confirmation_email(name, to_email, city, office, duplicate):
-    log(f"Sending email to {name} ({to_email}) for city {city}, office {office}, duplicate={duplicate}")
+    log(f"Sending email to {to_email} | duplicate: {duplicate}")
 
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
     if duplicate:
         subject = "You’re already subscribed"
-        body = f"""
-Hi {name},
+        body = f"""Hi {name},
 
 You're already on our notification list for {office} appointments in {city}.
+We’ll notify you as soon as something opens up.
 
-No need to register again — we will notify you as soon as a slot opens.
-
-If you'd like to support this project, feel free to check out the gift list: {WISHLIST_URL}
+If you'd like to support the project, here’s the wishlist: {WISHLIST_URL}
 
 Cheers,  
 Termin Checker Team
 """
     else:
-        subject = "You're subscribed – We'll notify you when an appointment opens"
-        body = f"""
-Hi {name},
+        subject = "You're subscribed – We'll notify you"
+        body = f"""Hi {name},
 
-Thank you for signing up!
+Thanks for signing up!
 
-We’ve successfully added your email to the notification list for {office} appointments in {city}.
+We’ve added you to the list for {office} appointments in {city}.
+We’ll notify you when there’s an available slot.
 
-As soon as a slot becomes available, we will notify you right away.
-
-If you'd like to support this project, feel free to check out the gift list: {WISHLIST_URL}
+You can support the project by checking out the wishlist: {WISHLIST_URL}
 
 Cheers,  
 Termin Checker Team
@@ -115,7 +110,7 @@ Termin Checker Team
             server.send_message(message)
         log("Email sent successfully")
     except Exception as e:
-        log(f"Error sending email: {str(e)}")
+        log(f"Email failed: {e}")
 
 def log(text):
     with open("test_log.txt", "a") as f:
