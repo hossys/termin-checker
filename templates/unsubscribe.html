@@ -1,19 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Unsubscribed</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <title>Unsubscribed - Termin Notify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      background-color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 900px;
+      margin: 30px auto;
+      width: 90%;
+    }
+
+    .image-box {
+      flex: 1;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      height: 360px;
+    }
+
+    .image-box img {
+      max-height: 100%;
+      width: auto;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+
+    .form-box {
+      flex: 1;
+      padding: 30px 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h2 {
+      color: #222;
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 22px;
+    }
+
+    p {
+      font-size: 15px;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    a.button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 16px;
+      background-color: #007BFF;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    a.button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        margin: 20px auto;
+        border-radius: 16px;
+      }
+
+      .image-box {
+        order: -1;
+        padding: 15px 20px 0;
+        height: 180px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="image-container">
-            <img id="img-before" src="{{ url_for('static', filename='before.jpg') }}" alt="Before Image">
-        </div>
-        <div class="form-container">
-            <h2>You’ve been unsubscribed.</h2>
-            <p>You’ll no longer receive notifications for {{ office }} in {{ city }}.</p>
-        </div>
+  <div class="container">
+    <div class="image-box">
+      <img src="{{ url_for('static', filename='before.webp') }}" alt="Unsubscribed">
     </div>
+    <div class="form-box">
+      <h2>You’ve been unsubscribed.</h2>
+      <p>You’ll no longer receive notifications for {{ office }} in {{ city }}.</p>
+
+      <a class="button" href="/">Back to Subscription</a><br>
+      <a class="button" href="{{ wishlist_url }}" target="_blank">See our Wish List</a>
+    </div>
+  </div>
 </body>
 </html>
