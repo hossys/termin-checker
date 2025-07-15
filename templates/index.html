@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Termin Notify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -15,27 +16,18 @@
       font-family: 'Inter', sans-serif;
       background-color: #f4f6f8;
       color: #333;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .scale-wrapper {
-      transform: scale(0.85); /* کاهش اندازه کل محتوای فرم + عکس */
-      transform-origin: top center;
     }
 
     .container {
       display: flex;
+      flex-direction: row;
       background-color: #fff;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       border-radius: 12px;
       overflow: hidden;
       max-width: 900px;
-      width: 100%;
-      margin: 20px;
-      flex-direction: row;
+      margin: 40px auto;
+      width: 90%;
     }
 
     .image-box {
@@ -70,6 +62,7 @@
       margin-bottom: 25px;
       text-align: center;
       font-weight: 600;
+      font-size: 22px;
     }
 
     label {
@@ -121,61 +114,65 @@
     }
 
     @media (max-width: 768px) {
-      .scale-wrapper {
-        transform: none; /* در موبایل scale نکن چون کوچیکه خودش */
-      }
-
       .container {
         flex-direction: column;
+        margin: 20px auto;
       }
 
-      .image-box, .form-box {
+      .image-box {
+        display: none;
+      }
+
+      .form-box {
         padding: 20px;
       }
 
-      .image-box img {
-        max-height: 250px;
+      h2 {
+        font-size: 20px;
+      }
+
+      input, select, button {
+        font-size: 16px;
+        padding: 14px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="scale-wrapper">
-    <div class="container">
-      <div class="image-box">
-        <img src="{{ url_for('static', filename='before.webp') }}" alt="Sad Illustration">
-      </div>
-      <div class="form-box">
-        <form action="/submit" method="POST">
-          <h2>Get Notified When a Slot Opens</h2>
+  <div class="container">
+    <div class="image-box">
+      <img src="{{ url_for('static', filename='before.webp') }}" alt="Sad Illustration">
+    </div>
+    <div class="form-box">
+      <form action="/submit" method="POST">
+        <h2>Get Notified When a Slot Opens</h2>
 
-          <label for="name">Name:</label>
-          <input type="text" name="name" id="name" placeholder="Your full name" required>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-          <label for="email">Email:</label>
-          <input type="email" name="email" id="email" placeholder="you@example.com" required>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-          <label for="city">City:</label>
-          <select name="city" id="city" required>
-            <option value="">-- Select City --</option>
-            <option value="Hamburg">Hamburg</option>
-            <option value="Berlin">Berlin</option>
-          </select>
+        <label for="city">City:</label>
+        <select name="city" id="city" required>
+          <option value="">-- Select City --</option>
+          <option value="Hamburg">Hamburg</option>
+          <option value="Berlin">Berlin</option>
+        </select>
 
-          <label for="service">Service:</label>
-          <select name="service" id="service" required>
-            <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
-          </select>
+        <label for="service">Service:</label>
+        <select name="service" id="service" required>
+          <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
+        </select>
 
-          <button type="submit">Subscribe</button>
+        <button type="submit">Subscribe</button>
 
-          <div class="donation">
-            If you find this helpful and would like to support us,<br>
-            you can check our
-            <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
-          </div>
-        </form>
-      </div>
+        <div class="donation">
+          If you find this helpful and would like to support us,<br>
+          you can check our
+          <a href="https://www.amazon.de/hz/wishlist/ls/214QLWQZ9B9DR?ref_=wl_share" target="_blank">Wish List</a>. Thank you!
+        </div>
+      </form>
     </div>
   </div>
 </body>
