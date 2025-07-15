@@ -115,51 +115,51 @@
       text-decoration: underline;
       font-weight: 600;
     }
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    margin: 20px auto;
+    border-radius: 16px;
+  }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        margin: 20px auto;
-        border-radius: 16px; 
-        transform: scale(0.9);  
-        transform-origin: top center;  
+  .image-box {
+    order: -1;
+    display: flex;
+    justify-content: center;
+    padding: 15px 20px 0;
+  }
 
-      }
+  .image-box img {
+    max-height: 180px;
+  }
 
-      .image-box {
-        order: -1;
-        display: flex;
-        justify-content: center;
-        padding: 15px 20px 0;
-      }
+  .form-box {
+    padding: 20px;
+  }
 
-      .image-box img {
-        max-height: 180px; /* ۱۰٪ کمتر */
-      }
+  h2 {
+    font-size: 20px;
+  }
 
-      .form-box {
-        padding: 20px;
-      }
+  input, select, button {
+    font-size: 15px;
+    padding: 12px;
+    margin-bottom: 11px;
+  }
 
-      h2 {
-        font-size: 20px;
-      }
+  label {
+    margin-top: 5px;
+  }
 
-      input, select, button {
-        font-size: 15px;
-        padding: 12px;
-        margin-bottom: 11px; /* کمی کمتر از قبل */
-      }
+  .donation {
+    font-size: 15px;
+    margin-top: 18px;
+  }
 
-      label {
-        margin-top: 5px;
-      }
-
-      .donation {
-        font-size: 15px;
-        margin-top: 18px;
-      }
-    }
+  body {
+    zoom: 0.9;
+  }
+}
   </style>
 </head>
 <body>
