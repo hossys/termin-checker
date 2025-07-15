@@ -38,17 +38,18 @@
       justify-content: center;
       padding: 20px;
       position: relative;
+      aspect-ratio: 512 / 390;
     }
 
     .image-box img {
+      max-height: 100%;
       max-width: 100%;
-      max-height: 360px;
       object-fit: contain;
       position: absolute;
       top: 0;
       left: 0;
+      transition: opacity 0.5s ease-in-out;
       opacity: 0;
-      transition: opacity 1s ease-in-out;
     }
 
     .image-box img.active {
@@ -133,7 +134,7 @@
       text-align: center;
       font-size: 16px;
       padding: 10px;
-      transition: opacity 0.8s ease;
+      transition: opacity 0.5s ease-in-out;
       opacity: 0;
     }
 
@@ -158,10 +159,6 @@
       .image-box {
         order: -1;
         padding: 15px 20px 0;
-      }
-
-      .image-box img {
-        max-height: 180px;
       }
 
       .form-box {
@@ -196,8 +193,8 @@
 <body>
   <div class="container">
     <div class="image-box">
-      <img id="img-before" src="{{ url_for('static', filename='before.webp') }}" alt="Sad" class="active">
-      <img id="img-after" src="{{ url_for('static', filename='after.webp') }}" alt="Happy">
+      <img id="img-before" src="{{ url_for('static', filename='before.webp') }}" alt="Before" class="active">
+      <img id="img-after" src="{{ url_for('static', filename='after.webp') }}" alt="After">
     </div>
     <div class="form-box" id="form-box">
       <form id="subscribe-form">
@@ -246,12 +243,10 @@
       const form = this;
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
-
       const formBox = document.getElementById('form-box');
       const loader = document.getElementById('loader');
       const thankYouDiv = document.getElementById('thank-you');
 
-      // Show loader immediately
       loader.style.display = 'block';
       form.style.opacity = '0.5';
 
@@ -263,15 +258,12 @@
 
       const result = await response.json();
 
-      // Hide form and loader
       form.style.display = 'none';
       loader.style.display = 'none';
 
-      // Switch image with transition
       document.getElementById('img-before').classList.remove('active');
       document.getElementById('img-after').classList.add('active');
 
-      // Compose message
       let title = `Thanks, ${name}!`;
       let message = "";
 
@@ -286,11 +278,8 @@
 
       message += "<br><br>Now sit back and relax – we got you! 🧘";
 
-      // Update thank-you content
       document.getElementById('thank-title').innerText = title;
       document.getElementById('thank-text').innerHTML = message;
-
-      // Show thank-you with fade-in
       thankYouDiv.classList.add('show');
     });
   </script>
