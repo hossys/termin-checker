@@ -30,6 +30,10 @@ city_config = {
     "frankfurt": {
         "url": "https://tevis.ekom21.de/vhsfra/select2?md=1",
         "offices": ["Einbürgerungstest"]
+    },
+    "cologne": {
+        "url": "https://vhs-koeln.de/Artikel/cmx54859f23489f6.html",
+        "offices": ["Einbürgerungstest"]
     }
 }
 
@@ -167,6 +171,27 @@ def check_frankfurt():
         log(f"❌ Frankfurt: Error parsing Termin info – {e}")
         return None
 
+def check_cologne():
+    log("🔍 Checking appointments for cologne")
+    url = city_config["cologne"]["url"]
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code != 200:
+            log(f"❌ Cologne: Failed to fetch URL – Status code: {response.status_code}")
+            return None
+    except Exception as e:
+        log(f"❌ Cologne: Exception during request: {e}")
+        return None
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    table = soup.find("table")
+    if table and "ausgebucht" not in table.get_text().lower():
+        log(f"✅ Cologne: Appointment found – check page manually: {url}")
+        return url
+    else:
+        log("ℹ️ Cologne: All listed dates are fully booked.")
+        return None
+
 def notify_all_subscribers(city, office, link):
     try:
         with sqlite3.connect(DB_PATH) as conn:
@@ -187,14 +212,25 @@ def send_notification_email(name, to_email, city, office, link):
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
-    subject = f"✅ New {office} appointment available in {city.capitalize()}!"
-    body = f"""
-    <p>Hi {name},</p>
-    <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
-    <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
-    <p>Please act quickly – slots can fill up fast.</p>
-    <p>Best regards,<br>Terminotify Team</p>
-    """
+    if city.lower() == "cologne":
+        subject = f"ℹ️ {office} appointment info – {city.capitalize()}"
+        body = f"""
+        <p>Hi {name},</p>
+        <p>There’s now a new appointment date listed for <strong>{office}</strong> in <strong>{city.capitalize()}</strong>.</p>
+        <p><strong>Important:</strong> Registration is only possible <u>in person</u> at the VHS Kundenzentrum in Köln. There is no online booking available.</p>
+        <p>Please bring your valid passport and register as soon as possible at the address mentioned on the page below:</p>
+        <p><a href="{link}" target="_blank" style="background-color:#28a745;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">See appointment details</a></p>
+        <p>Best regards,<br>Terminotify Team</p>
+        """
+    else:
+        subject = f"✅ New {office} appointment available in {city.capitalize()}!"
+        body = f"""
+        <p>Hi {name},</p>
+        <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
+        <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
+        <p>Please act quickly – slots can fill up fast.</p>
+        <p>Best regards,<br>Terminotify Team</p>
+        """
 
     message = MIMEText(body, "html")
     message['Subject'] = subject
@@ -217,6 +253,7 @@ if __name__ == "__main__":
         ("berlin", check_berlin),
         ("munich", check_munich),
         ("frankfurt", check_frankfurt),
+        ("cologne", check_cologne),
     ]:
         link = check_function()
         if link:
