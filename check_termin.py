@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
+LOG_PATH = os.path.join(BASE_DIR, "check_log.txt")
+
 def log(text):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(LOG_PATH, "a", encoding="utf-8") as f:
@@ -16,9 +20,6 @@ def log(text):
 
 log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
-LOG_PATH = os.path.join(BASE_DIR, "check_log.txt")
 
 city_config = {
     "hamburg": {
