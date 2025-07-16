@@ -135,8 +135,10 @@ def check_munich():
     course_teasers = soup.select("div.courseTeaser")
 
     for teaser in course_teasers:
-        teaser_text = teaser.get_text(strip=True).lower()
-        if any(keyword in teaser_text for keyword in ["anmeldung", "jetzt anmelden", "zur anmeldung", "plätze frei", "buchbar"]):
+        status_element = teaser.select_one(".courseStatus")
+        status_text = status_element.get_text(strip=True).lower() if status_element else ""
+        
+        if any(kw in status_text for kw in ["anmeldung möglich", "anmeldung", "buchbar", "freie plätze"]):
             link_tag = teaser.find("a", href=True)
             if link_tag:
                 full_link = f"https://www.mvhs.de{link_tag['href']}"
