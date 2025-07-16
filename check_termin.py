@@ -22,6 +22,10 @@ city_config = {
     "berlin": {
         "url": "https://service.berlin.de/terminvereinbarung/termin/taken/",
         "offices": ["Einbürgerungstest"]
+    },
+    "munich": {
+        "url": "https://www.mvhs.de/kurse/460-CAT-KAT7869",
+        "offices": ["Einbürgerungstest"]
     }
 }
 
@@ -33,16 +37,15 @@ def log(text):
 
 
 def check_hamburg():
-    city_key = "hamburg"
-    log(f"🔍 Checking appointments for {city_key}")
-    url = city_config[city_key]["url"]
+    log("🔍 Checking appointments for hamburg")
+    url = city_config["hamburg"]["url"]
     try:
         response = requests.get(url, timeout=10)
         if response.status_code != 200:
-            log(f"❌ Failed to fetch {url} – Status code: {response.status_code}")
+            log(f"❌ Hamburg: Failed to fetch URL – Status code: {response.status_code}")
             return None
     except Exception as e:
-        log(f"❌ Exception during request to {url}: {e}")
+        log(f"❌ Hamburg: Exception during request: {e}")
         return None
 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -112,6 +115,33 @@ def check_berlin():
         return None
 
 
+def check_munich():
+    log("🔍 Checking appointments for munich")
+    url = city_config["munich"]["url"]
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code != 200:
+            log(f"❌ Munich: Failed to fetch URL – Status code: {response.status_code}")
+            return None
+    except Exception as e:
+        log(f"❌ Munich: Exception during request: {e}")
+        return None
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    course_teasers = soup.select("div.courseTeaser")
+
+    for teaser in course_teasers:
+        if "Anmeldung möglich" in teaser.get_text():
+            link_tag = teaser.find("a")
+            if link_tag and link_tag.get("href"):
+                full_link = f"https://www.mvhs.de{link_tag['href']}"
+                log(f"✅ Munich: Available appointment found: {full_link}")
+                return full_link
+
+    log("❌ Munich: No available appointments found.")
+    return None
+
+
 def notify_all_subscribers(city, office, link):
     try:
         with sqlite3.connect(DB_PATH) as conn:
@@ -135,17 +165,16 @@ def send_notification_email(name, to_email, city, office, link):
 
     subject = f"✅ New {office} appointment available in {city.capitalize()}!"
     body = f"""
-Hi {name},
+    <p>Hi {name},</p>
 
-A new appointment for {office} in {city.capitalize()} is now available!
+    <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
 
-<a href="{link}">Click here to register</a>
+    <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
 
-Please act quickly – slots can fill up fast.
+    <p>Please act quickly – slots can fill up fast.</p>
 
-Best regards,  
-Terminotify Team
-"""
+    <p>Best regards,<br>Terminotify Team</p>
+    """
 
     message = MIMEText(body, "html")
     message['Subject'] = subject
@@ -173,5 +202,10 @@ if __name__ == "__main__":
     if berlin_link:
         for office in city_config["berlin"]["offices"]:
             notify_all_subscribers("berlin", office, berlin_link)
+
+    munich_link = check_munich()
+    if munich_link:
+        for office in city_config["munich"]["offices"]:
+            notify_all_subscribers("munich", office, munich_link)
 
     log("✅ --- Cron run finished ---\n")
