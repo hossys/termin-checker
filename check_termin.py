@@ -135,9 +135,10 @@ def check_munich():
     course_teasers = soup.select("div.courseTeaser")
 
     for teaser in course_teasers:
-        if "Anmeldung möglich" in teaser.get_text():
-            link_tag = teaser.find("a")
-            if link_tag and link_tag.get("href"):
+        status_element = teaser.select_one(".courseStatus")
+        if status_element and "anmelden" in status_element.get_text(strip=True).lower():
+            link_tag = teaser.find("a", href=True)
+            if link_tag:
                 full_link = f"https://www.mvhs.de{link_tag['href']}"
                 log(f"✅ Munich: Available appointment found: {full_link}")
                 return full_link
