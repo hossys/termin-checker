@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
+log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
