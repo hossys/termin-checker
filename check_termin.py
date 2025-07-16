@@ -197,17 +197,19 @@ def notify_all_subscribers(city, office, link):
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("""
-    SELECT name, email FROM subscribers
-    WHERE city=? AND office=? AND unsubscribed=0
-""", (city, office))
+                SELECT name, email FROM subscribers
+                WHERE city=? AND office=? AND unsubscribed=0
+            """, (city, office))
             subscribers = cursor.fetchall()
 
+        log(f"📋 Notifying for city: {city}, office: {office}, found subscribers: {len(subscribers)}")
+
         for name, email in subscribers:
+            log(f"📤 Sending email to {email}")
             send_notification_email(name, email, city, office, link)
 
     except Exception as e:
         log(f"❌ Error notifying subscribers: {e}")
-
 def send_notification_email(name, to_email, city, office, link):
     sender_email = os.getenv("EMAIL_USER")
     sender_password = os.getenv("EMAIL_PASS")
