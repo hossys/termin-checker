@@ -132,18 +132,14 @@ def check_munich():
         return None
 
     soup = BeautifulSoup(response.text, 'html.parser')
-    course_teasers = soup.select("div.courseTeaser")
+    all_cards = soup.select("div.card-list-item-info")
 
-    for teaser in course_teasers:
-        status_element = teaser.select_one(".courseStatus")
-        status_text = status_element.get_text(strip=True).lower() if status_element else ""
-        
-        if any(kw in status_text for kw in ["anmeldung möglich", "anmeldung", "buchbar", "freie plätze"]):
-            link_tag = teaser.find("a", href=True)
-            if link_tag:
-                full_link = f"https://www.mvhs.de{link_tag['href']}"
-                log(f"✅ Munich: Available appointment found: {full_link}")
-                return full_link
+    for card in all_cards:
+        card_text = card.get_text(separator=" ", strip=True).lower()
+        log(f"🔎 Munich: card content: {card_text}")
+        if "termin" in card_text or "fr." in card_text or "mo." in card_text or "di." in card_text or "mi." in card_text:
+            log(f"✅ Munich: Found appointment card: {card_text}")
+            return url
 
     log("❌ Munich: No available appointments found.")
     return None
