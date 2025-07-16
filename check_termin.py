@@ -196,9 +196,9 @@ def notify_all_subscribers(city, office, link):
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT name, email FROM subscribers
-                WHERE city=? AND office=?
-            """, (city, office))
+    SELECT name, email FROM subscribers
+    WHERE city=? AND office=? AND unsubscribed=0
+""", (city, office))
             subscribers = cursor.fetchall()
 
         for name, email in subscribers:
