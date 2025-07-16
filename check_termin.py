@@ -26,15 +26,17 @@ city_config = {
     "munich": {
         "url": "https://www.mvhs.de/kurse/460-CAT-KAT7869",
         "offices": ["Einbürgerungstest"]
+    },
+    "frankfurt": {
+        "url": "https://tevis.ekom21.de/vhsfra/select2?md=1",
+        "offices": ["Einbürgerungstest"]
     }
 }
-
 
 def log(text):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(f"[{timestamp}] {text}\n")
-
 
 def check_hamburg():
     log("🔍 Checking appointments for hamburg")
@@ -75,13 +77,12 @@ def check_hamburg():
     log("❌ Hamburg: No available courses found.")
     return None
 
-
 def check_berlin():
     log("🔍 Checking appointments for berlin")
     url = "https://service.berlin.de/terminvereinbarung/termin/day/"
     payload = {
-        "dienstleister": "122210",  # VHS Berlin
-        "anliegen[]": "120686",     # Einbürgerungstest
+        "dienstleister": "122210",
+        "anliegen[]": "120686",
         "termin": "1"
     }
     headers = {
@@ -114,7 +115,6 @@ def check_berlin():
         log(f"❌ Berlin: Exception during check – {e}")
         return None
 
-
 def check_munich():
     log("🔍 Checking appointments for munich")
     url = city_config["munich"]["url"]
@@ -141,6 +141,31 @@ def check_munich():
     log("❌ Munich: No available appointments found.")
     return None
 
+def check_frankfurt():
+    log("🔍 Checking appointments for frankfurt")
+    url = city_config["frankfurt"]["url"]
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code != 200:
+            log(f"❌ Frankfurt: Failed to fetch URL – Status code: {response.status_code}")
+            return None
+    except Exception as e:
+        log(f"❌ Frankfurt: Exception during request: {e}")
+        return None
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    try:
+        dt = soup.find("dt", string="Termin")
+        dd = dt.find_next_sibling("dd").text.strip()
+        if dd.lower() != "noch nicht gesetzt":
+            log(f"✅ Frankfurt: Appointment found – Termin: {dd}")
+            return url
+        else:
+            log("ℹ️ Frankfurt: Termin not set yet.")
+            return None
+    except Exception as e:
+        log(f"❌ Frankfurt: Error parsing Termin info – {e}")
+        return None
 
 def notify_all_subscribers(city, office, link):
     try:
@@ -158,7 +183,6 @@ def notify_all_subscribers(city, office, link):
     except Exception as e:
         log(f"❌ Error notifying subscribers: {e}")
 
-
 def send_notification_email(name, to_email, city, office, link):
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
@@ -166,13 +190,9 @@ def send_notification_email(name, to_email, city, office, link):
     subject = f"✅ New {office} appointment available in {city.capitalize()}!"
     body = f"""
     <p>Hi {name},</p>
-
     <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
-
     <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
-
     <p>Please act quickly – slots can fill up fast.</p>
-
     <p>Best regards,<br>Terminotify Team</p>
     """
 
@@ -189,23 +209,18 @@ def send_notification_email(name, to_email, city, office, link):
     except Exception as e:
         log(f"❌ Error sending email to {to_email}: {str(e)}")
 
-
 if __name__ == "__main__":
     log("🚀 --- Cron run started ---")
 
-    hamburg_link = check_hamburg()
-    if hamburg_link:
-        for office in city_config["hamburg"]["offices"]:
-            notify_all_subscribers("hamburg", office, hamburg_link)
-
-    berlin_link = check_berlin()
-    if berlin_link:
-        for office in city_config["berlin"]["offices"]:
-            notify_all_subscribers("berlin", office, berlin_link)
-
-    munich_link = check_munich()
-    if munich_link:
-        for office in city_config["munich"]["offices"]:
-            notify_all_subscribers("munich", office, munich_link)
+    for city, check_function in [
+        ("hamburg", check_hamburg),
+        ("berlin", check_berlin),
+        ("munich", check_munich),
+        ("frankfurt", check_frankfurt),
+    ]:
+        link = check_function()
+        if link:
+            for office in city_config[city]["offices"]:
+                notify_all_subscribers(city, office, link)
 
     log("✅ --- Cron run finished ---\n")
