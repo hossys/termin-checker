@@ -232,7 +232,7 @@ def send_notification_email(name, to_email, city, office, link):
         <p>Best regards,<br>Terminotify Team</p>
         """
 
-    message = MIMEText(body, "html")
+    message = MIMEText(body, "html", "utf-8")
     message['Subject'] = subject
     message['From'] = sender_email
     message['To'] = to_email
