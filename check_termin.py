@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
 LOG_PATH = os.path.join(BASE_DIR, "check_log.txt")
@@ -18,8 +19,8 @@ def log(text):
     with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(f"[{timestamp}] {text}\n")
 
-log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
+log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
 city_config = {
     "hamburg": {
@@ -215,8 +216,8 @@ def notify_all_subscribers(city, office, link):
         log(f"❌ Error notifying subscribers: {e}")
 
 def send_notification_email(name, to_email, city, office, link):
-    sender_email = os.getenv('EMAIL_USER')
-    sender_password = os.getenv('EMAIL_PASS')
+    sender_email = os.getenv("EMAIL_USER")
+    sender_password = os.getenv("EMAIL_PASS")
 
     if city.lower() == "cologne":
         subject = f"ℹ️ {office} appointment info – {city.capitalize()}"
