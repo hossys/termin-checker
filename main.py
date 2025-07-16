@@ -40,7 +40,7 @@ def index():
 def submit():
     name = request.form.get('name')
     email = request.form.get('email').strip().lower()
-    city = request.form.get('city')
+    city = request.form.get('city').strip().lower()
     office = request.form.get('service')
 
     if not (name and email and city and office):
