@@ -9,6 +9,11 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
+def log(text):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(f"[{timestamp}] {text}\n")
+
 log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
