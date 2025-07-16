@@ -14,13 +14,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "subscribers.db")
 LOG_PATH = os.path.join(BASE_DIR, "check_log.txt")
 
-def log(text):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(f"[{timestamp}] {text}\n")
-
-
-log(f"📦 Loaded EMAIL_USER: {os.getenv('EMAIL_USER')}")
 
 city_config = {
     "hamburg": {
