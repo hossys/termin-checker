@@ -39,7 +39,7 @@ city_config = {
     "cologne": {
         "url": "https://vhs-koeln.de/Artikel/cmx54859f23489f6.html",
         "offices": ["Einbürgerungstest"]
-    }
+    },
     "hannover": {
         "url": "https://www.vhs-hannover.de/vhs-programm/deutsch-integration/einbuergerungstest",
         "offices": ["Einbürgerungstest"]
