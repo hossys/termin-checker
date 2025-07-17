@@ -52,82 +52,113 @@ def submit():
     cursor = conn.cursor()
 
     cursor.execute("""
-     UPDATE subscribers 
-     SET unsubscribed = 0, name = ?, city = ?, office = ?, language = ?
-     WHERE email = ? AND city = ? AND office = ?
-     """, (name, city, office, language, email, city, office))
-    
+        SELECT unsubscribed FROM subscribers WHERE email=? AND city=? AND office=?
+    """, (email, city, office))
     result = cursor.fetchone()
 
     if result:
-        if result[0] == 1:
-            cursor.execute("""
-                UPDATE subscribers 
-                SET unsubscribed = 0, name = ?, city = ?, office = ?
-                WHERE email = ? AND city = ? AND office = ?
-            """, (name, city, office, email, city, office))
-            conn.commit()
-            conn.close()
-            send_confirmation_email(name, email, city, office, duplicate=False)
-            return jsonify({
-                "status": "resubscribed",
-                "message": "You’ve been re-subscribed! We’ll notify you when there's a slot."
-            })
-        else:
-            conn.close()
-            send_confirmation_email(name, email, city, office, duplicate=True)
-            return jsonify({
-                "status": "duplicate",
-                "message": "You're already on the list. We’ll notify you when there's a slot."
-            })
-    else:
         cursor.execute("""
-            INSERT INTO subscribers (name, email, city, office) VALUES (?, ?, ?, ?)
-        """, (name, email, city, office))
+            UPDATE subscribers 
+            SET unsubscribed = 0, name = ?, city = ?, office = ?, language = ?
+            WHERE email = ? AND city = ? AND office = ?
+        """, (name, city, office, language, email, city, office))
         conn.commit()
         conn.close()
-
-        send_confirmation_email(name, email, city, office, duplicate=False)
+        send_confirmation_email(name, email, city, office, language, duplicate=(result[0] == 0))
+        return jsonify({
+            "status": "resubscribed" if result[0] == 1 else "duplicate",
+            "message": "Updated successfully."
+        })
+    else:
+        cursor.execute("""
+            INSERT INTO subscribers (name, email, city, office, language) VALUES (?, ?, ?, ?, ?)
+        """, (name, email, city, office, language))
+        conn.commit()
+        conn.close()
+        send_confirmation_email(name, email, city, office, language, duplicate=False)
         return jsonify({
             "status": "success",
             "message": "You’ve been subscribed! We’ll notify you when there's a slot."
         })
 
-def send_confirmation_email(name, to_email, city, office, duplicate):
+def send_confirmation_email(name, to_email, city, office, language, duplicate):
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
     resubscribe_link = f"{DOMAIN}/resubscribe?{urlencode({'email': to_email, 'city': city, 'office': office, 'name': name})}"
 
-    if duplicate:
-        subject = "You're already subscribed – Termin Notify"
-        body = f"""
-        <p>Hi {name},</p>
+    subjects = {
+        "en": {
+            "duplicate": "You're already subscribed – Termin Notify",
+            "new": "You're on the list! 🎉 – Termin Notify"
+        },
+        "fa": {
+            "duplicate": "شما قبلاً عضو شده‌اید – ترمین نوتیفای",
+            "new": "شما در لیست هستید! 🎉 – ترمین نوتیفای"
+        },
+        "de": {
+            "duplicate": "Du bist bereits angemeldet – Termin Notify",
+            "new": "Du stehst auf der Liste! 🎉 – Termin Notify"
+        }
+        # سایر زبان‌ها در صورت نیاز اضافه شود
+    }
 
-        <p>You're already on our list for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📝<br>
-        We'll keep an eye out and let you know when a spot opens!</p>
+    bodies = {
+        "en": {
+            "duplicate": f"""
+                <p>Hi {name},</p>
+                <p>You're already on our list for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📝</p>
+                <p>Check out our <a href="{WISHLIST_URL}">wishlist</a>. 🎁</p>
+                <p><a href="{unsubscribe_link}">Unsubscribe</a> anytime.</p>
+                <p>Cheers,<br>Termin Notify</p>
+            """,
+            "new": f"""
+                <p>Hi {name},</p>
+                <p>You’re subscribed to notifications for <strong>{office}</strong> in <strong>{city}</strong>. 📬</p>
+                <p><a href="{WISHLIST_URL}">Support us</a> if you like.</p>
+                <p>To unsubscribe, <a href="{unsubscribe_link}">click here</a>.</p>
+                <p>Cheers,<br>Termin Notify</p>
+            """
+        },
+        "fa": {
+            "duplicate": f"""
+                <p>سلام {name}،</p>
+                <p>شما قبلاً برای نوتیفیکیشن‌های <strong>{office}</strong> در <strong>{city}</strong> ثبت‌نام کرده‌اید. 📝</p>
+                <p>از <a href="{WISHLIST_URL}">لیست آرزوهای ما</a> دیدن کنید. 🎁</p>
+                <p><a href="{unsubscribe_link}">لغو عضویت</a></p>
+                <p>با احترام،<br>تیم ترمین نوتیفای</p>
+            """,
+            "new": f"""
+                <p>سلام {name}،</p>
+                <p>ثبت‌نام شما برای نوتیفیکیشن‌های <strong>{office}</strong> در <strong>{city}</strong> موفقیت‌آمیز بود. 📬</p>
+                <p><a href="{WISHLIST_URL}">ما را حمایت کنید</a> اگر خواستید.</p>
+                <p><a href="{unsubscribe_link}">لغو عضویت</a></p>
+                <p>با احترام،<br>تیم ترمین نوتیفای</p>
+            """
+        },
+        "de": {
+            "duplicate": f"""
+                <p>Hallo {name},</p>
+                <p>Du bist bereits für <strong>{office}</strong> in <strong>{city}</strong> registriert. 📝</p>
+                <p>Schaue auf unsere <a href="{WISHLIST_URL}">Wunschliste</a>. 🎁</p>
+                <p><a href="{unsubscribe_link}">Abmelden</a></p>
+                <p>Grüße,<br>Termin Notify Team</p>
+            """,
+            "new": f"""
+                <p>Hallo {name},</p>
+                <p>Du bist jetzt für <strong>{office}</strong> in <strong>{city}</strong> registriert. 📬</p>
+                <p><a href="{WISHLIST_URL}">Unterstütze uns</a>, wenn du möchtest.</p>
+                <p><a href="{unsubscribe_link}">Abmelden</a></p>
+                <p>Grüße,<br>Termin Notify Team</p>
+            """
+        }
+    }
 
-        <p>If you'd like to make our day, check out our <a href="{WISHLIST_URL}">wishlist</a>. 🎁</p>
-
-        <p>Want to unsubscribe? No hard feelings — just <a href="{unsubscribe_link}">click here</a>.</p>
-
-        <p>Cheers,<br>Termin Checker Team</p>
-        """
-    else:
-        subject = "You're on the list! 🎉 – Termin Notify"
-        body = f"""
-        <p>Hi {name},</p>
-
-        <p>Thanks for signing up! You're now subscribed to notifications for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📬<br>
-        We'll ping you when something pops up!</p>
-
-        <p>You can support us by checking out our <a href="{WISHLIST_URL}">wishlist</a>. 🙌</p>
-
-        <p>Changed your mind? You can <a href="{unsubscribe_link}">unsubscribe here</a>.</p>
-
-        <p>Cheers,<br>Termin Checker Team</p>
-        """
+    lang = language if language in subjects else "en"
+    status_key = "duplicate" if duplicate else "new"
+    subject = subjects[lang][status_key]
+    body = bodies[lang][status_key]
 
     message = MIMEMultipart()
     message['From'] = sender_email
@@ -189,7 +220,7 @@ def resubscribe():
     conn.commit()
     conn.close()
 
-    send_confirmation_email(name, email, city, office, duplicate=False)
+    send_confirmation_email(name, email, city, office, "en", duplicate=False)
     return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
 
 def log(text):
