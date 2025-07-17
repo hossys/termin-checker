@@ -7,9 +7,7 @@
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='terminotify-favicon1.ico') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -47,10 +45,7 @@
       width: auto;
       object-fit: contain;
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      top: 0; bottom: 0; left: 0; right: 0;
       margin: auto;
       opacity: 0;
       transition: opacity 0.6s ease-in-out;
@@ -70,9 +65,7 @@
       justify-content: center;
     }
 
-    form {
-      width: 100%;
-    }
+    form { width: 100%; }
 
     h2 {
       color: #222;
@@ -147,33 +140,19 @@
       opacity: 1;
     }
 
-    @media (min-width: 769px) {
-      .image-box {
-        padding-top: 90px;
-      }
-        .image-box img {
-    transform: scale(1.1);
-  }
-
-    }
-
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
         margin: 20px auto;
         border-radius: 16px;
-        width: 95%;         
-        max-width: 580px;  
+        width: 95%;
+        max-width: 580px;
       }
 
       .image-box {
         order: -1;
         padding: 15px 20px 0;
         height: 180px;
-      }
-
-      .image-box img {
-        max-height: 100%;
       }
 
       .form-box {
@@ -183,9 +162,7 @@
         box-sizing: border-box;
       }
 
-      h2 {
-        font-size: 20px;
-      }
+      h2 { font-size: 20px; }
 
       input, select, button {
         font-size: 15px;
@@ -193,14 +170,7 @@
         margin-bottom: 11px;
       }
 
-      label {
-        margin-top: 5px;
-      }
-
-      .donation {
-        font-size: 15px;
-        margin-top: 18px;
-      }
+      label { margin-top: 5px; }
 
       html {
         transform: scale(0.75);
@@ -217,15 +187,15 @@
     </div>
     <div class="form-box" id="form-box">
       <form id="subscribe-form">
-        <h2>Get Notified When a Slot Opens</h2>
+        <h2 id="form-title">Get Notified When a Slot Opens</h2>
 
-        <label for="name">Name:</label>
+        <label for="name" id="label-name">Name:</label>
         <input type="text" name="name" id="name" placeholder="Your full name" required>
 
-        <label for="email">Email:</label>
+        <label for="email" id="label-email">Email:</label>
         <input type="email" name="email" id="email" placeholder="you@example.com" required>
 
-        <label for="city">City:</label>
+        <label for="city" id="label-city">City:</label>
         <select name="city" id="city" required>
           <option value="">-- Select City --</option>
           <option value="Hamburg">Hamburg</option>
@@ -236,12 +206,14 @@
           <option value="Hannover">Hannover</option> 
         </select>
 
-        <label for="service">Service:</label>
+        <label for="service" id="label-service">Service:</label>
         <select name="service" id="service" required>
-          <option value="Einbürgerungstest">Einbürgerungstest – Naturalization Test</option>
+          <option value="Einbürgerungstest" id="option-service">Einbürgerungstest – Naturalization Test</option>
         </select>
 
-        <button type="submit">Subscribe</button>
+        <input type="hidden" name="language" id="selected-language" value="en">
+
+        <button type="submit" id="submit-button">Subscribe</button>
       </form>
 
       <div class="thank-you-message" id="thank-you">
@@ -249,88 +221,141 @@
         <p id="thank-text"></p>
       </div>
 
-      <div class="donation">
+      <div class="donation" id="donation">
         Feeling kind? Buy us a gift from our <a href="{{ wishlist_url }}" target="_blank" style="white-space: nowrap;">Wish List</a>.
       </div>
     </div>
   </div>
 
+  <footer style="font-size: 12px; color: #555; padding: 20px 10px; margin-top: 30px;">
+    <p id="footer-text" style="text-align: center; margin-bottom: 10px;">
+      Get notified when appointments open – no refreshing needed.
+    </p>
+    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; text-align: center;">
+      <div>
+        <strong id="footer-contact-label">Contact us:</strong>
+        <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 15px;">🌐</span>
+        <select id="language" onchange="changeLanguage()" style="font-size: 12px; padding: 4px 6px; border-radius: 4px; border: 1px solid #ccc;">
+          <option value="en" selected>EN</option>
+          <option value="de">DE</option>
+          <option value="fa">FA</option>
+          <option value="tr">TR</option>
+          <option value="uk">UK</option>
+          <option value="ar">AR</option>
+        </select>
+      </div>
+    </div>
+  </footer>
+
   <script>
-    document.getElementById('subscribe-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const form = this;
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-
-      const formData = new FormData(form);
-      const response = await fetch('/submit', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-
-      form.style.display = 'none';
-
-      document.getElementById('img-before').classList.remove('active');
-      document.getElementById('img-after').classList.add('active');
-
-      let title = `Thanks, ${name}!`;
-      let message = "";
-
-      if (result.status === "duplicate") {
-        message = `We've already received your email (${email}) for this service. Sit tight – we'll notify you when a slot is available! 😊`;
-      } else if (result.status === "success") {
-        message = `We've saved your email (${email}) successfully. You’ll be notified as soon as a slot opens. 🚀`;
-      } else {
-        title = "Oops!";
-        message = result.message || "Something went wrong.";
+    const translations = {
+      en: {
+        title: "Get Notified When a Slot Opens",
+        name: "Name:",
+        email: "Email:",
+        city: "City:",
+        service: "Service:",
+        placeholder_name: "Your full name",
+        placeholder_email: "you@example.com",
+        service_option: "Einbürgerungstest – Naturalization Test",
+        button: "Subscribe",
+        donation: "Feeling kind? Buy us a gift from our <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>Wish List</a>.",
+        footer: "Get notified when appointments open – no refreshing needed.",
+        contact: "Contact us:"
+      },
+      de: {
+        title: "Benachrichtigt werden, wenn ein Termin verfügbar ist",
+        name: "Name:",
+        email: "E-Mail:",
+        city: "Stadt:",
+        service: "Dienstleistung:",
+        placeholder_name: "Ihr vollständiger Name",
+        placeholder_email: "you@example.com",
+        service_option: "Einbürgerungstest – Einbürgerungstest",
+        button: "Abonnieren",
+        donation: "Lust zu helfen? Schenk uns was von unserer <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>Wunschliste</a>.",
+        footer: "Benachrichtigt werden, wenn Termine verfügbar sind – kein Refresh nötig.",
+        contact: "Kontakt:"
+      },
+      fa: {
+        title: "با باز شدن وقت، با خبر شو",
+        name: "نام:",
+        email: "ایمیل:",
+        city: "شهر:",
+        service: "سرویس:",
+        placeholder_name: "نام کامل شما",
+        placeholder_email: "you@example.com",
+        service_option: "تست تابعیت – Einbürgerungstest",
+        button: "عضویت",
+        donation: "حمایت می‌کنی؟ یه هدیه از <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>لیست آرزوها</a> بخر.",
+        footer: "به‌محض باز شدن وقت جدید مطلع شو – بدون نیاز به رفرش.",
+        contact: "ارتباط با ما:"
+      },
+      tr: {
+        title: "Randevu açıldığında haberdar olun",
+        name: "İsim:",
+        email: "E-posta:",
+        city: "Şehir:",
+        service: "Hizmet:",
+        placeholder_name: "Tam adınız",
+        placeholder_email: "you@example.com",
+        service_option: "Vatandaşlık Testi – Einbürgerungstest",
+        button: "Abone Ol",
+        donation: "Bizi desteklemek ister misiniz? <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>İstek Listemiz</a>den hediye alın.",
+        footer: "Yeni randevular açıldığında bildirim alın – sayfa yenilemeye gerek yok.",
+        contact: "İletişim:"
+      },
+      uk: {
+        title: "Отримуйте повідомлення про нові терміни",
+        name: "Ім'я:",
+        email: "Ел. пошта:",
+        city: "Місто:",
+        service: "Послуга:",
+        placeholder_name: "Ваше повне ім'я",
+        placeholder_email: "you@example.com",
+        service_option: "Тест на натуралізацію – Einbürgerungstest",
+        button: "Підписатися",
+        donation: "Хочете допомогти? Купіть подарунок з <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>списку бажань</a>.",
+        footer: "Дізнавайтеся про нові терміни без перезавантаження сторінки.",
+        contact: "Зв'язок з нами:"
+      },
+      ar: {
+        title: "احصل على إشعار عند فتح موعد",
+        name: "الاسم:",
+        email: "البريد الإلكتروني:",
+        city: "المدينة:",
+        service: "الخدمة:",
+        placeholder_name: "اسمك الكامل",
+        placeholder_email: "you@example.com",
+        service_option: "اختبار التجنيس – Einbürgerungstest",
+        button: "اشترك",
+        donation: "هل تود الدعم؟ اشترِ لنا هدية من <a href='{{ wishlist_url }}' target='_blank' style='white-space: nowrap;'>قائمة الأمنيات</a>.",
+        footer: "احصل على إشعار عند فتح مواعيد جديدة – لا حاجة للتحديث المستمر.",
+        contact: "تواصل معنا:"
       }
+    };
 
-      message += "<br><br>Now sit back and relax – we got you! 🧘";
+    function changeLanguage() {
+      const lang = document.getElementById("language").value;
+      const t = translations[lang];
 
-      document.getElementById('thank-title').innerText = title;
-      document.getElementById('thank-text').innerHTML = message;
-
-      document.getElementById('thank-you').classList.add('show');
-    });
+      document.getElementById("form-title").innerText = t.title;
+      document.getElementById("label-name").innerText = t.name;
+      document.getElementById("label-email").innerText = t.email;
+      document.getElementById("label-city").innerText = t.city;
+      document.getElementById("label-service").innerText = t.service;
+      document.getElementById("name").placeholder = t.placeholder_name;
+      document.getElementById("email").placeholder = t.placeholder_email;
+      document.getElementById("option-service").innerText = t.service_option;
+      document.getElementById("submit-button").innerText = t.button;
+      document.getElementById("donation").innerHTML = t.donation;
+      document.getElementById("footer-text").innerText = t.footer;
+      document.getElementById("footer-contact-label").innerText = t.contact;
+      document.getElementById("selected-language").value = lang;
+    }
   </script>
-<footer style="font-size: 12px; color: #555; padding: 20px 10px; margin-top: 30px;">
-  <p id="footer-text" style="text-align: center; margin-bottom: 10px;">
-    Get notified when appointments open – no refreshing needed.
-  </p>
-
-  <div style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    text-align: center;
-  ">
-    <div>
-      <strong>Contact us:</strong>
-      <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 15px;">🌐</span>
-      <select id="language" onchange="changeLanguage()" style="
-        font-size: 12px;
-        padding: 4px 6px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      ">
-        <option value="en" selected>EN</option>
-        <option value="de">DE</option>
-        <option value="fa">FA</option>
-        <option value="tr">TR</option>
-        <option value="uk">UK</option>
-        <option value="ar">AR</option>
-      </select>
-    </div>
-  </div>
-</footer>
 </body>
 </html>
