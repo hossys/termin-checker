@@ -370,51 +370,62 @@
     const formData = new FormData(e.target);
     const lang = document.getElementById("selected-language").value;
 
-    try {
-      const response = await fetch("/submit", {
-        method: "POST",
-        body: formData,
-      });
+try {
+  const response = await fetch("/submit", {
+    method: "POST",
+    body: formData,
+  });
 
-      const result = await response.json();
+  const result = await response.json();
 
-      if (["success", "resubscribed", "duplicate"].includes(result.status)) {
-        document.getElementById("subscribe-form").style.display = "none";
+  if (["success", "resubscribed", "duplicate"].includes(result.status)) {
+    document.getElementById("subscribe-form").style.display = "none";
 
-        // Switch image
-        document.getElementById("img-before").classList.remove("active");
-        document.getElementById("img-after").classList.add("active");
+    // Switch image
+    document.getElementById("img-before").classList.remove("active");
+    document.getElementById("img-after").classList.add("active");
 
-        // Show thank you message
-        const thankMessages = {
-          en: "Thanks! We’ll notify you when something opens up.",
-          de: "Danke! Wir benachrichtigen dich, wenn ein Termin verfügbar ist.",
-          fa: "مرسی! به‌محض باز شدن وقت، بهت خبر می‌دیم.",
-          tr: "Teşekkürler! Randevu açıldığında sizi bilgilendireceğiz.",
-          uk: "Дякуємо! Повідомимо, коли з’явиться новий термін.",
-          ar: "شكراً! سنعلمك عند توفر موعد جديد."
-        };
+    // Get user data
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const city = formData.get("city");
+    const service = formData.get("service");
 
-        const titleMap = {
-          en: "Thank you!",
-          de: "Danke!",
-          fa: "ممنون!",
-          tr: "Teşekkürler!",
-          uk: "Дякуємо!",
-          ar: "شكراً!"
-        };
+    // Set language
+    const lang = document.getElementById("selected-language").value;
 
-        document.getElementById("thank-title").innerText = titleMap[lang] || "Thank you!";
-        document.getElementById("thank-text").innerText = thankMessages[lang] || thankMessages['en'];
+    // Custom titles (e.g., "مرسی حسین عزیز!")
+    const titleMap = {
+      en: `Thanks dear ${name}!`,
+      de: `Danke ${name}!`,
+      fa: `مرسی ${name} عزیز!`,
+      tr: `Teşekkürler ${name}!`,
+      uk: `Дякуємо, ${name}!`,
+      ar: `شكراً ${name} العزيز!`
+    };
 
-        document.getElementById("thank-you").classList.add("show");
-      } else {
-        alert(result.message || "Something went wrong.");
-      }
-    } catch (err) {
-      alert("Something went wrong while submitting.");
-      console.error(err);
-    }
+    // Custom messages
+    const messageMap = {
+      en: `We’ve added your email (${email}) to the notification list for ${service} in ${city}. Just chill 🎉, watch some Netflix 🍿 — we’ll ping you as soon as a slot opens!`,
+      de: `Deine E-Mail (${email}) wurde für den Service ${service} in ${city} zur Benachrichtigungsliste hinzugefügt. Chill einfach 🎉, schau etwas Netflix 🍿 – wir melden uns sofort, wenn ein Termin frei wird!`,
+      fa: `ایمیلت (${email}) رو برای سرویس ${service} در شهر ${city} به لیست اطلاع‌رسانی اضافه کردیم. برو یه کم چیل کن 🎉 نتفلیکس ببین 🍿 – به‌محض باز شدن ترمین خبرت می‌کنیم!`,
+      tr: `E-postan (${email}), ${city} şehrindeki ${service} hizmeti için bildirim listesine eklendi. Şimdi rahatla 🎉, biraz Netflix izle 🍿 – randevu açılır açılmaz haber vereceğiz!`,
+      uk: `Твою електронну адресу (${email}) додано до списку сповіщень для послуги ${service} у місті ${city}. Розслабся 🎉, подивись Netflix 🍿 – повідомимо, як тільки з’явиться термін!`,
+      ar: `لقد أضفنا بريدك (${email}) إلى قائمة الإشعارات لخدمة ${service} في مدينة ${city}. خذ وقتك واسترح 🎉، وشاهد نتفليكس 🍿 – سنعلمك فور توفر موعد جديد!`
+    };
+
+    // Inject messages into thank-you box
+    document.getElementById("thank-title").innerText = titleMap[lang] || "Thank you!";
+    document.getElementById("thank-text").innerText = messageMap[lang] || messageMap["en"];
+
+    document.getElementById("thank-you").classList.add("show");
+  } else {
+    alert(result.message || "Something went wrong.");
+  }
+} catch (err) {
+  alert("Something went wrong while submitting.");
+  console.error(err);
+}
   });
 </script>
 </body>
