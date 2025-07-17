@@ -191,12 +191,22 @@ def check_cologne():
 
     soup = BeautifulSoup(response.text, 'html.parser')
     table = soup.find("table")
-    if table and "ausgebucht" not in table.get_text().lower():
-        log(f"✅ Cologne: Appointment found – check page manually: {url}")
-        return url
-    else:
-        log("ℹ️ Cologne: All listed dates are fully booked.")
+    if not table:
+        log("❌ Cologne: No table found on the page.")
         return None
+
+    rows = table.find_all("tr")
+    for row in rows:
+        cells = row.find_all("td")
+        if len(cells) >= 2:
+            test_date = cells[0].get_text(strip=True)
+            status = cells[1].get_text(strip=True).lower()
+            if "ausgebucht" not in status and status:
+                log(f"✅ Cologne: Available date found – {test_date} (Anmeldeschluss: {status})")
+                return url
+
+    log("ℹ️ Cologne: All listed dates are fully booked.")
+    return None
 
 def notify_all_subscribers(city, office, link):
     try:
