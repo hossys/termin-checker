@@ -121,8 +121,6 @@ def check_berlin():
         return None
 
 def check_munich():
-    for i, card in enumerate(all_cards):
-        log(f"🔍 Card {i}: {card.prettify()}")
     log("🔍 Checking appointments for munich")
     url = city_config["munich"]["url"]
     try:
@@ -137,7 +135,11 @@ def check_munich():
     soup = BeautifulSoup(response.text, 'html.parser')
     all_cards = soup.select("div.card-list-item-info")
 
-    for card in all_cards:
+    if not all_cards:
+        log("❌ Munich: No appointment cards found (empty all_cards).")
+        return None
+
+    for i, card in enumerate(all_cards):
         card_text = card.get_text(separator=" ", strip=True).lower()
         log(f"🔎 Munich: card content: {card_text}")
         if "termin" in card_text or "fr." in card_text or "mo." in card_text or "di." in card_text or "mi." in card_text:
