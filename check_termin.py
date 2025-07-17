@@ -200,6 +200,36 @@ def check_cologne():
     log("ℹ️ Cologne: All listed dates are fully booked.")
     return None
 
+def check_hannover():
+    log("🔍 Checking appointments for hannover")
+    url = "https://www.vhs-hannover.de/vhs-programm/deutsch-integration/einbuergerungstest"
+    try:
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+        if response.status_code != 200:
+            log(f"❌ Hannover: Failed to fetch URL – Status code: {response.status_code}")
+            return None
+    except Exception as e:
+        log(f"❌ Hannover: Exception during request: {e}")
+        return None
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    page_text = soup.get_text(separator=" ", strip=True).lower()
+
+    keywords = [
+        "keine termine",
+        "keine weiteren termine",
+        "alle plätze",
+        "ausgebucht",
+        "keine anmeldung möglich"
+    ]
+
+    if any(kw in page_text for kw in keywords):
+        log("ℹ️ Hannover: Page indicates no appointments – match found in keywords.")
+        return None
+    else:
+        log("✅ Hannover: Possible appointment available.")
+        return url
+
 def notify_all_subscribers(city, office, link):
     try:
         with sqlite3.connect(DB_PATH) as conn:
@@ -257,6 +287,7 @@ if __name__ == "__main__":
         ("munich", check_munich),
         ("frankfurt", check_frankfurt),
         ("cologne", check_cologne),
+        ("hanover", check_hanover),
     ]:
         link = check_function()
         if link:
