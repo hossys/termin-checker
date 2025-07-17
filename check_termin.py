@@ -102,23 +102,28 @@ def check_berlin():
     }
 
     try:
-        response = requests.post(url, data=payload, headers=headers)
+        response = requests.post(url, data=payload, headers=headers, timeout=10)
         if response.status_code != 200:
             log(f"❌ Berlin: Failed request – Status code {response.status_code}")
             return None
-        if "keine freien termine" in response.text.lower():
-            log("ℹ️ Berlin: No available appointments.")
-            return None
 
         soup = BeautifulSoup(response.text, 'html.parser')
+        title = soup.title.get_text(strip=True) if soup.title else ""
+        if "keine Termine für ihre Auswahl" in title:
+            log("ℹ️ Berlin: Title indicates no available appointments.")
+            return None
+
+        # Try to find the appointment link (fallback logic)
         for link in soup.find_all("a"):
             href = link.get("href", "")
             if "calendar" in href:
                 full_link = f"https://service.berlin.de{href}"
                 log(f"✅ Berlin: Available appointment found: {full_link}")
                 return full_link
+
         log("❌ Berlin: No appointment links found in HTML.")
         return None
+
     except Exception as e:
         log(f"❌ Berlin: Exception during check – {e}")
         return None
