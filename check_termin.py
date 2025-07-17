@@ -291,7 +291,7 @@ if __name__ == "__main__":
         ("munich", check_munich),
         ("frankfurt", check_frankfurt),
         ("cologne", check_cologne),
-        ("hanover", check_hanover),
+        ("hannover", check_hannover),
     ]:
         link = check_function()
         if link:
