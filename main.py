@@ -281,19 +281,32 @@ def unsubscribe():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+
+
     cursor.execute("""
         UPDATE subscribers SET unsubscribed = 1 WHERE email = ? AND city = ? AND office = ?
     """, (email, city, office))
     conn.commit()
 
-    cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (email, city, office))
+
+    cursor.execute("""
+        SELECT name, language FROM subscribers WHERE email = ? AND city = ? AND office = ?
+    """, (email, city, office))
     row = cursor.fetchone()
     conn.close()
 
-    language = row[0] if row and row[0] else "en"
+    name = row[0] if row and row[0] else "دوست"
+    language = row[1] if row and row[1] else "en"
 
-    return render_template("unsubscribe.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL, language=language)
-
+    return render_template(
+        "unsubscribe.html",
+        name=name,
+        city=city,
+        office=office,
+        email=email,
+        wishlist_url=WISHLIST_URL,
+        language=language
+    )
 @app.route('/resubscribe')
 def resubscribe():
     email = request.args.get('email', '').strip().lower()
