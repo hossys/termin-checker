@@ -39,6 +39,7 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    language = request.form.get('language', 'en')
     name = request.form.get('name')
     email = request.form.get('email').strip().lower()
     city = request.form.get('city').strip().lower()
@@ -50,7 +51,12 @@ def submit():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT unsubscribed FROM subscribers WHERE email=? AND city=? AND office=?", (email, city, office))
+    cursor.execute("""
+     UPDATE subscribers 
+     SET unsubscribed = 0, name = ?, city = ?, office = ?, language = ?
+     WHERE email = ? AND city = ? AND office = ?
+     """, (name, city, office, language, email, city, office))
+    
     result = cursor.fetchone()
 
     if result:
