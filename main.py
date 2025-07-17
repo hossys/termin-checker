@@ -286,7 +286,7 @@ def unsubscribe():
     conn.commit()
     conn.close()
 
-    return render_template("unsubscribe.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
+    return render_template("unsubscribe.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL, language=language)
 
 @app.route('/resubscribe')
 def resubscribe():
