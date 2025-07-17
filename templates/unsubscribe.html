@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ language or 'en' }}">
 <head>
   <meta charset="UTF-8">
   <title>Unsubscribed – Termin Notify</title>
@@ -7,9 +7,7 @@
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='terminotify-favicon1.ico') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -91,32 +89,101 @@
     }
   </style>
 </head>
-<body>
+<body data-lang="{{ language or 'en' }}">
   <div class="container">
     <div class="image-box">
       <img src="{{ url_for('static', filename='before.webp') }}" alt="Unsubscribed">
     </div>
     <div class="text-box">
-      <h2>You’ve been unsubscribed</h2>
-      <p>You will no longer receive notifications for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.</p>
-
-      <p>
-        Want to get notifications again?
-        <a href="{{ url_for('resubscribe', email=email, name=name, office=office, city=city) }}">
-          Resubscribe here
-        </a>.
-      </p>
-
-      <p>
-        Curious about our favorite tools?
-        <a href="{{ wishlist_url }}" target="_blank">Check out our Wish List</a>.
-      </p>
+      <h2 id="unsub-title"></h2>
+      <p id="unsub-text"></p>
+      <p id="resub-line"></p>
+      <p id="wishlist-line"></p>
     </div>
   </div>
-<footer style="text-align:center; font-size: 14px; color: #555; padding: 20px 10px; margin-top: 30px;">
-  Terminotify helps you get notified when a new appointment becomes available – no need to refresh city websites all the time.
-  <br><br>
-  <strong>Contact:</strong> <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
-</footer>
+
+  <footer style="text-align:center; font-size: 14px; color: #555; padding: 20px 10px; margin-top: 30px;" id="footer-text">
+    <br><br>
+    <strong id="footer-contact-label"></strong> <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+  </footer>
+
+  <script>
+    const userData = {
+      name: "{{ name }}",
+      email: "{{ email }}",
+      city: "{{ city }}",
+      office: "{{ office }}",
+      wishlist_url: "{{ wishlist_url }}",
+      resubscribe_url: "{{ url_for('resubscribe', email=email, name=name, office=office, city=city, language=language) }}"
+    };
+
+    const translations = {
+      en: {
+        title: `You’ve been unsubscribed, ${userData.name}!`,
+        text: `You will no longer receive notifications for <strong>${userData.office}</strong> in <strong>${userData.city}</strong>.`,
+        resub: `Want to get notifications again? <a href="${userData.resubscribe_url}">Resubscribe here</a>.`,
+        wishlist: `Curious about our favorite tools? <a href="${userData.wishlist_url}" target="_blank">Check out our Wish List</a>.`,
+        footer: "Terminotify helps you get notified when a new appointment becomes available – no need to refresh city websites all the time.",
+        contact: "Contact:"
+      },
+      fa: {
+        title: `لغو عضویت شدی، ${userData.name} عزیز!`,
+        text: `دیگه برات نوتیف برای <strong>${userData.office}</strong> در <strong>${userData.city}</strong> نمی‌فرستیم.`,
+        resub: `می‌خوای دوباره عضو شی؟ <a href="${userData.resubscribe_url}">اینجا کلیک کن</a>.`,
+        wishlist: `می‌خوای بدونی از چی خوشمون میاد؟ <a href="${userData.wishlist_url}" target="_blank">لیست آرزوها</a> رو ببین.`,
+        footer: "Terminotify بهت کمک می‌کنه بدون نیاز به رفرش، از وقت‌های جدید باخبر شی.",
+        contact: "ارتباط:"
+      },
+      de: {
+        title: `Du wurdest abgemeldet, ${userData.name}!`,
+        text: `Du erhältst keine Benachrichtigungen mehr für <strong>${userData.office}</strong> in <strong>${userData.city}</strong>.`,
+        resub: `Willst du wieder Benachrichtigungen erhalten? <a href="${userData.resubscribe_url}">Hier erneut abonnieren</a>.`,
+        wishlist: `Neugierig auf unsere Tools? <a href="${userData.wishlist_url}" target="_blank">Wunschliste ansehen</a>.`,
+        footer: "Terminotify benachrichtigt dich, wenn ein neuer Termin verfügbar ist – kein ständiges Aktualisieren nötig.",
+        contact: "Kontakt:"
+      },
+      tr: {
+        title: `Abonelikten çıkarıldınız, ${userData.name}!`,
+        text: `${userData.city} şehrindeki <strong>${userData.office}</strong> için artık bildirim almayacaksınız.`,
+        resub: `Yeniden bildirim almak ister misiniz? <a href="${userData.resubscribe_url}">Buraya tıklayın</a>.`,
+        wishlist: `Favori araçlarımızı merak mı ediyorsunuz? <a href="${userData.wishlist_url}" target="_blank">İstek listemize göz atın</a>.`,
+        footer: "Terminotify yeni randevular açıldığında sizi bilgilendirir – sayfa yenilemeye gerek yok.",
+        contact: "İletişim:"
+      },
+      uk: {
+        title: `Вас відписано, ${userData.name}!`,
+        text: `Ви більше не отримуватимете сповіщення про <strong>${userData.office}</strong> у місті <strong>${userData.city}</strong>.`,
+        resub: `Хочете знову отримувати сповіщення? <a href="${userData.resubscribe_url}">Підпишіться тут</a>.`,
+        wishlist: `Цікаво, що ми використовуємо? <a href="${userData.wishlist_url}" target="_blank">Перегляньте наш список бажань</a>.`,
+        footer: "Terminotify повідомляє, коли з’являються нові терміни – без потреби оновлювати сторінку.",
+        contact: "Зв'язок:"
+      },
+      ar: {
+        title: `تم إلغاء اشتراكك، ${userData.name}!`,
+        text: `لن تتلقى إشعارات بعد الآن لخدمة <strong>${userData.office}</strong> في <strong>${userData.city}</strong>.`,
+        resub: `هل تريد الاشتراك مرة أخرى؟ <a href="${userData.resubscribe_url}">اضغط هنا</a>.`,
+        wishlist: `هل أنت فضولي حول أدواتنا المفضلة؟ <a href="${userData.wishlist_url}" target="_blank">اطلع على قائمة الأمنيات</a>.`,
+        footer: "Terminotify يساعدك على تلقي الإشعارات عند توفر مواعيد جديدة – دون الحاجة لتحديث الصفحة.",
+        contact: "تواصل معنا:"
+      }
+    };
+
+    const lang = document.body.dataset.lang || "en";
+    const t = translations[lang] || translations["en"];
+
+    document.getElementById("unsub-title").innerText = t.title;
+    document.getElementById("unsub-text").innerHTML = t.text;
+    document.getElementById("resub-line").innerHTML = t.resub;
+    document.getElementById("wishlist-line").innerHTML = t.wishlist;
+    document.getElementById("footer-text").innerHTML = `
+      ${t.footer}<br><br><strong id="footer-contact-label">${t.contact}</strong> 
+      <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+    `;
+
+    if (["fa", "ar"].includes(lang)) {
+      document.body.setAttribute("dir", "rtl");
+      document.body.style.textAlign = "right";
+    }
+  </script>
 </body>
 </html>
