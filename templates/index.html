@@ -355,6 +355,12 @@
       document.getElementById("footer-text").innerText = t.footer;
       document.getElementById("footer-contact-label").innerText = t.contact;
       document.getElementById("selected-language").value = lang;
+      if (["fa", "ar"].includes(lang)) {
+         document.body.setAttribute("dir", "rtl");
+         } 
+      else {
+         document.body.setAttribute("dir", "ltr");
+}
     }
   </script>
   <script>
