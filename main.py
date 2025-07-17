@@ -253,6 +253,11 @@ def send_confirmation_email(name, to_email, city, office, language=None, duplica
     message['From'] = sender_email
     message['To'] = to_email
     message['Subject'] = subject
+    if language in ["fa", "ar"]:
+        body = f'<div dir="rtl" style="text-align: right;">{body}</div>'
+    else:
+        body = f'<div dir="ltr">{body}</div>'
+
     message.attach(MIMEText(body, 'html'))
 
     try:
