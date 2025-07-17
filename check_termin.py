@@ -140,7 +140,7 @@ def check_frankfurt():
     log("🔍 Checking appointments for frankfurt")
     url = city_config["frankfurt"]["url"]
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         if response.status_code != 200:
             log(f"❌ Frankfurt: Failed to fetch URL – Status code: {response.status_code}")
             return None
@@ -149,11 +149,18 @@ def check_frankfurt():
         return None
 
     soup = BeautifulSoup(response.text, "html.parser")
+
     try:
-        dt = soup.find("dt", string="Termin")
-        dd = dt.find_next_sibling("dd").text.strip()
-        if dd.lower() != "noch nicht gesetzt":
-            log(f"✅ Frankfurt: Appointment found – Termin: {dd}")
+        dt_termin = soup.find("dt", string=lambda s: s and "Termin" in s)
+        if not dt_termin:
+            log("❌ Frankfurt: 'Termin' label not found.")
+            return None
+
+        dd_termin = dt_termin.find_next_sibling("dd")
+        value = dd_termin.get_text(strip=True).lower() if dd_termin else "noch nicht gesetzt"
+
+        if "noch nicht gesetzt" not in value:
+            log(f"✅ Frankfurt: Termin is set – value: {value}")
             return url
         else:
             log("ℹ️ Frankfurt: Termin not set yet.")
