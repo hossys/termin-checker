@@ -39,47 +39,70 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    language = request.form.get('language', 'en')
-    name = request.form.get('name')
-    email = request.form.get('email').strip().lower()
-    city = request.form.get('city').strip().lower()
-    office = request.form.get('service')
+    try:
+        language = request.form.get('language', 'en')
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        city = request.form.get('city', '').strip().lower()
+        office = request.form.get('service', '').strip()
 
-    if not (name and email and city and office):
-        return jsonify({"status": "error", "message": "All fields are required."})
+        print("▶ Received form data:", name, email, city, office, language)
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+        if not (name and email and city and office):
+            return jsonify({"status": "error", "message": "All fields are required."})
 
-    cursor.execute("""
-        SELECT unsubscribed FROM subscribers WHERE email=? AND city=? AND office=?
-    """, (email, city, office))
-    result = cursor.fetchone()
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    if result:
         cursor.execute("""
-            UPDATE subscribers 
-            SET unsubscribed = 0, name = ?, city = ?, office = ?, language = ?
-            WHERE email = ? AND city = ? AND office = ?
-        """, (name, city, office, language, email, city, office))
-        conn.commit()
-        conn.close()
-        send_confirmation_email(name, email, city, office, language, duplicate=(result[0] == 0))
-        return jsonify({
-            "status": "resubscribed" if result[0] == 1 else "duplicate",
-            "message": "Updated successfully."
-        })
-    else:
-        cursor.execute("""
-            INSERT INTO subscribers (name, email, city, office, language) VALUES (?, ?, ?, ?, ?)
-        """, (name, email, city, office, language))
-        conn.commit()
-        conn.close()
-        send_confirmation_email(name, email, city, office, language, duplicate=False)
-        return jsonify({
-            "status": "success",
-            "message": "You’ve been subscribed! We’ll notify you when there's a slot."
-        })
+            SELECT unsubscribed FROM subscribers WHERE email=? AND city=? AND office=?
+        """, (email, city, office))
+        result = cursor.fetchone()
+
+        if result:
+            cursor.execute("""
+                UPDATE subscribers 
+                SET unsubscribed = 0, name = ?, city = ?, office = ?, language = ?
+                WHERE email = ? AND city = ? AND office = ?
+            """, (name, city, office, language, email, city, office))
+            conn.commit()
+            conn.close()
+
+            print("▶ Re-subscribing existing user...")
+
+            try:
+                send_confirmation_email(name, email, city, office, language, duplicate=(result[0] == 0))
+            except Exception as e:
+                log(f"Email failed (duplicate): {e}")
+                return jsonify({"status": "error", "message": "Email could not be sent."})
+
+            return jsonify({
+                "status": "resubscribed" if result[0] == 1 else "duplicate",
+                "message": "Updated successfully."
+            })
+        else:
+            cursor.execute("""
+                INSERT INTO subscribers (name, email, city, office, language) VALUES (?, ?, ?, ?, ?)
+            """, (name, email, city, office, language))
+            conn.commit()
+            conn.close()
+
+            print("▶ Subscribing new user...")
+
+            try:
+                send_confirmation_email(name, email, city, office, language, duplicate=False)
+            except Exception as e:
+                log(f"Email failed (new): {e}")
+                return jsonify({"status": "error", "message": "Email could not be sent."})
+
+            return jsonify({
+                "status": "success",
+                "message": "You’ve been subscribed! We’ll notify you when there's a slot."
+            })
+
+    except Exception as e:
+        log(f"Global submit error: {e}")
+        return jsonify({"status": "error", "message": "Something went wrong on the server."})
 
 email_translations = {
     'en': {
@@ -205,24 +228,26 @@ def send_confirmation_email(name, to_email, city, office, language=None, duplica
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
+    if not sender_email or not sender_password:
+        raise Exception("Missing email credentials in environment variables.")
 
     if not language:
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (to_email, city, office))
-        result = cursor.fetchone()
-        conn.close()
-        language = result[0] if result and result[0] in email_translations else 'en'
-
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (to_email, city, office))
+            result = cursor.fetchone()
+            conn.close()
+            language = result[0] if result and result[0] in email_translations else 'en'
+        except Exception as e:
+            log(f"Failed to get language from DB: {e}")
+            language = 'en'
 
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
-
-
     t = email_translations.get(language, email_translations['en'])
 
     subject = t['subject_duplicate'] if duplicate else t['subject_new']
     body = t['body_duplicate'](name, city, office, WISHLIST_URL, unsubscribe_link) if duplicate else t['body_new'](name, city, office, WISHLIST_URL, unsubscribe_link)
-
 
     message = MIMEMultipart()
     message['From'] = sender_email
@@ -234,8 +259,10 @@ def send_confirmation_email(name, to_email, city, office, language=None, duplica
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender_email, sender_password)
             server.send_message(message)
+        log(f"📧 Confirmation email sent to {to_email}")
     except Exception as e:
-        log(f"Email failed: {e}")
+        log(f"❌ Failed to send confirmation email to {to_email}: {str(e)}")
+        raise
 
 @app.route('/unsubscribe')
 def unsubscribe():
