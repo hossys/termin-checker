@@ -379,7 +379,7 @@
       const result = await response.json();
 
       if (["success", "resubscribed", "duplicate"].includes(result.status)) {
-        document.getElementById("form-box").style.display = "none";
+        document.getElementById("subscribe-form").style.display = "none";
 
         // Switch image
         document.getElementById("img-before").classList.remove("active");
