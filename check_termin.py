@@ -5,6 +5,7 @@ import smtplib
 import sqlite3
 import os
 import pytz
+from email_translations import email_translations, WISHLIST_URL
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
@@ -252,22 +253,39 @@ def notify_all_subscribers(city, office, link):
     except Exception as e:
         log(f"❌ Error notifying subscribers: {e}")
 
+
 def send_notification_email(name, to_email, city, office, link):
     sender_email = os.getenv("EMAIL_USER")
     sender_password = os.getenv("EMAIL_PASS")
 
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
 
-    subject = f"✅ New {office} appointment available in {city.capitalize()}!"
-    body = f"""
-    <p>Hi {name},</p>
-    <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
-    <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
-    <p>Please act quickly – slots can fill up fast.</p>
-    <p>You can support us by checking out our <a href="{WISHLIST_URL}" target="_blank">wishlist</a>. 🎁</p>
-    <p>If you're done and want to unsubscribe, <a href="{unsubscribe_link}">click here</a>.</p>
-    <p>Cheers,<br>Termin Notify Team</p>
-    """
+    # Get language from DB
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT language FROM subscribers WHERE email=? AND city=? AND office=?", (to_email, city, office))
+    result = cursor.fetchone()
+    conn.close()
+
+    language = result[0] if result and result[0] in email_translations else 'en'
+    t = email_translations[language]
+
+    subject = t.get('subject_notify', f"✅ New {office} appointment available in {city.capitalize()}!")
+
+
+    if 'body_notify' in t:
+        body = t['body_notify'](name, city, office, link, WISHLIST_URL, unsubscribe_link)
+    else:
+
+        body = f"""
+        <p>Hi {name},</p>
+        <p>A new appointment for <strong>{office}</strong> in <strong>{city.capitalize()}</strong> is now available!</p>
+        <p><a href="{link}" target="_blank" style="background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Click here to register</a></p>
+        <p>Please act quickly – slots can fill up fast.</p>
+        <p>You can support us by checking out our <a href="{WISHLIST_URL}" target="_blank">wishlist</a>. 🎁</p>
+        <p>If you're done and want to unsubscribe, <a href="{unsubscribe_link}">click here</a>.</p>
+        <p>Cheers,<br>Termin Notify Team</p>
+        """
 
     message = MIMEMultipart()
     message['Subject'] = subject
@@ -282,7 +300,6 @@ def send_notification_email(name, to_email, city, office, link):
         log(f"📧 Email sent to {to_email}")
     except Exception as e:
         log(f"❌ Error sending email to {to_email}: {str(e)}")
-
 if __name__ == "__main__":
     log("🚀 --- Cron run started ---")
     for city, check_function in [
