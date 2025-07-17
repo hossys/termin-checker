@@ -294,7 +294,7 @@ def resubscribe():
 
     send_confirmation_email(name, email, city, office, language, duplicate=False)
 
-    return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
+    return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL, language=language)
 def log(text):
     with open("test_log.txt", "a") as f:
         f.write(text + "\n")
