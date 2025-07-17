@@ -297,10 +297,22 @@
     });
   </script>
 <footer style="text-align:center; font-size: 12px; color: #555; padding: 20px 10px; margin-top: 30px;">
-  <p id="footer-text">Get notified when appointments open – no refreshing needed.</p>
-  <p><strong id="footer-contact-label">Contact us:</strong> 
-    <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+  <p id="footer-text" style="margin-bottom: 10px;">
+    Get notified when appointments open – no refreshing needed.
   </p>
+  <div style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
+    <strong id="footer-contact-label">Contact us:</strong>
+    <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+    <label for="language" style="margin-left: 10px;">🌐</label>
+    <select id="language" onchange="changeLanguage()" style="font-size: 12px; padding: 2px 6px;">
+      <option value="en" selected>EN</option>
+      <option value="de">DE</option>
+      <option value="fa">FA</option>
+      <option value="tr">TR</option>
+      <option value="uk">UK</option>
+      <option value="ar">AR</option>
+    </select>
+  </div>
 </footer>
 </body>
 </html>
