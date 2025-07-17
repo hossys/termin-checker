@@ -88,44 +88,28 @@ def check_hamburg():
     log("❌ Hamburg: No available courses found.")
     return None
 
+
 def check_berlin():
     log("🔍 Checking appointments for berlin")
-    url = "https://service.berlin.de/terminvereinbarung/termin/day/"
-    payload = {
-        "dienstleister": "122210",
-        "anliegen[]": "120686",
-        "termin": "1"
-    }
-    headers = {
-        "User-Agent": "Mozilla/5.0",
-        "X-Requested-With": "XMLHttpRequest"
-    }
-
+    url = "https://service.berlin.de/terminvereinbarung/termin/taken/"
     try:
-        response = requests.post(url, data=payload, headers=headers, timeout=10)
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         if response.status_code != 200:
             log(f"❌ Berlin: Failed request – Status code {response.status_code}")
             return None
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.title.get_text(strip=True) if soup.title else ""
-        if "keine Termine für ihre Auswahl" in title:
-            log("ℹ️ Berlin: Title indicates no available appointments.")
+        soup = BeautifulSoup(response.text, "html.parser")
+        title = soup.find("title").get_text(strip=True).lower()
+
+        if "keine termine" in title or "entschuldigung" in title:
+            log("ℹ️ Berlin: No appointments available according to title.")
             return None
 
-        # Try to find the appointment link (fallback logic)
-        for link in soup.find_all("a"):
-            href = link.get("href", "")
-            if "calendar" in href:
-                full_link = f"https://service.berlin.de{href}"
-                log(f"✅ Berlin: Available appointment found: {full_link}")
-                return full_link
-
-        log("❌ Berlin: No appointment links found in HTML.")
-        return None
+        log(f"✅ Berlin: Appointment available – page title: {title}")
+        return url
 
     except Exception as e:
-        log(f"❌ Berlin: Exception during check – {e}")
+        log(f"❌ Berlin: Exception during request – {e}")
         return None
 
 def check_munich():
