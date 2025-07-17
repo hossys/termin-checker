@@ -24,6 +24,7 @@ def initialize_db():
             email TEXT NOT NULL,
             city TEXT NOT NULL,
             office TEXT NOT NULL,
+            language TEXT DEFAULT 'en',
             unsubscribed INTEGER DEFAULT 0
         )
     """)
