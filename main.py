@@ -81,84 +81,145 @@ def submit():
             "message": "You’ve been subscribed! We’ll notify you when there's a slot."
         })
 
-def send_confirmation_email(name, to_email, city, office, language, duplicate):
+email_translations = {
+    'en': {
+        'subject_new': "You're on the list! 🎉 – Termin Notify",
+        'subject_duplicate': "You're already subscribed – Termin Notify",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Hi {name},</p>
+            <p>Thanks for signing up! You're now subscribed to notifications for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📬<br>
+            We'll ping you when something pops up!</p>
+            <p>You can support us by checking out our <a href="{wishlist}">wishlist</a>. 🙌</p>
+            <p>Changed your mind? You can <a href="{unsubscribe}">unsubscribe here</a>.</p>
+            <p>Cheers,<br>Termin Checker Team</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Hi {name},</p>
+            <p>You're already on our list for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📝<br>
+            We'll keep an eye out and let you know when a spot opens!</p>
+            <p>If you'd like to make our day, check out our <a href="{wishlist}">wishlist</a>. 🎁</p>
+            <p>Want to unsubscribe? No hard feelings — just <a href="{unsubscribe}">click here</a>.</p>
+            <p>Cheers,<br>Termin Checker Team</p>
+        """
+    },
+    'fa': {
+        'subject_new': "شما در لیست هستید! 🎉 – ترمین نوتیفای",
+        'subject_duplicate': "شما قبلاً عضو شده‌اید – ترمین نوتیفای",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>{name} عزیز،</p>
+            <p>ممنون که ثبت‌نام کردید! حالا شما در لیست اطلاع‌رسانی وقت‌های <strong>{office}</strong> در <strong>{city}</strong> هستید. 📬<br>
+            به‌محض باز شدن وقت جدید بهتون خبر می‌دیم.</p>
+            <p>می‌تونید از ما حمایت کنید با دیدن <a href="{wishlist}">لیست آرزوها</a> 🙌</p>
+            <p>نظرتون عوض شده؟ <a href="{unsubscribe}">لغو عضویت</a> رو بزنید.</p>
+            <p>با احترام،<br>تیم ترمین نوتیفای</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>{name} عزیز،</p>
+            <p>شما قبلاً برای وقت <strong>{office}</strong> در <strong>{city}</strong> عضو شده‌اید. 📝<br>
+            ما پیگیر هستیم و به‌محض باز شدن وقت بهتون اطلاع می‌دیم.</p>
+            <p>اگه دوست داشتید خوشحالمون کنید، <a href="{wishlist}">لیست آرزوها</a> ما اینجاست. 🎁</p>
+            <p>برای لغو عضویت، <a href="{unsubscribe}">اینجا کلیک کنید</a>.</p>
+            <p>با احترام،<br>تیم ترمین نوتیفای</p>
+        """
+    },
+    'de': {
+        'subject_new': "Du stehst auf der Liste! 🎉 – Termin Notify",
+        'subject_duplicate': "Du bist bereits abonniert – Termin Notify",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Hallo {name},</p>
+            <p>Danke für deine Anmeldung! Du bekommst Benachrichtigungen für <strong>{office}</strong>-Termine in <strong>{city}</strong>. 📬<br>
+            Wir informieren dich, sobald ein Termin frei wird!</p>
+            <p>Unterstütze uns mit einem Blick auf unsere <a href="{wishlist}">Wunschliste</a>. 🙌</p>
+            <p>Möchtest du dich abmelden? <a href="{unsubscribe}">Hier klicken</a>.</p>
+            <p>Viele Grüße,<br>Termin Notify Team</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Hallo {name},</p>
+            <p>Du bist bereits auf der Liste für <strong>{office}</strong>-Termine in <strong>{city}</strong>. 📝<br>
+            Wir benachrichtigen dich, sobald ein Termin frei ist.</p>
+            <p>Mach uns eine Freude und schau auf unsere <a href="{wishlist}">Wunschliste</a>. 🎁</p>
+            <p>Abmelden? <a href="{unsubscribe}">Hier klicken</a>.</p>
+            <p>Viele Grüße,<br>Termin Notify Team</p>
+        """
+    },
+    'tr': {
+        'subject_new': "Listeye eklendiniz! 🎉 – Termin Notify",
+        'subject_duplicate': "Zaten abonesiniz – Termin Notify",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Merhaba {name},</p>
+            <p>Kayıt olduğunuz için teşekkürler! Artık <strong>{city}</strong> şehrindeki <strong>{office}</strong> randevuları için bilgilendirileceksiniz. 📬</p>
+            <p>Destek olmak isterseniz <a href="{wishlist}">dilek listemize</a> göz atabilirsiniz. 🙌</p>
+            <p>Vazgeçtiniz mi? <a href="{unsubscribe}">Buradan ayrılabilirsiniz</a>.</p>
+            <p>Sevgiler,<br>Termin Notify Ekibi</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Merhaba {name},</p>
+            <p>Zaten <strong>{city}</strong> şehrindeki <strong>{office}</strong> randevuları için kayıtlısınız. 📝<br>
+            Bir yer açıldığında sizi bilgilendireceğiz.</p>
+            <p>İsterseniz <a href="{wishlist}">dilek listemize</a> göz atabilirsiniz. 🎁</p>
+            <p>Aboneliği sonlandırmak için <a href="{unsubscribe}">buraya tıklayın</a>.</p>
+            <p>Sevgiler,<br>Termin Notify Ekibi</p>
+        """
+    },
+    'uk': {
+        'subject_new': "Вас додано до списку! 🎉 – Termin Notify",
+        'subject_duplicate': "Ви вже підписані – Termin Notify",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Привіт {name},</p>
+            <p>Дякуємо за підписку! Тепер ви отримуватимете сповіщення про <strong>{office}</strong> у <strong>{city}</strong>. 📬</p>
+            <p>Підтримайте нас, переглянувши <a href="{wishlist}">наш список побажань</a>. 🙌</p>
+            <p>Передумали? <a href="{unsubscribe}">Скасувати підписку</a>.</p>
+            <p>З повагою,<br>Команда Termin Notify</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>Привіт {name},</p>
+            <p>Ви вже підписані на сповіщення про <strong>{office}</strong> у <strong>{city}</strong>. 📝</p>
+            <p>Ми повідомимо, коли з’явиться новий час.</p>
+            <p><a href="{wishlist}">Список побажань</a> для підтримки. 🎁</p>
+            <p><a href="{unsubscribe}">Відписатися</a></p>
+            <p>З повагою,<br>Команда Termin Notify</p>
+        """
+    },
+    'ar': {
+        'subject_new': "تمت إضافتك للقائمة! 🎉 – Termin Notify",
+        'subject_duplicate': "أنت مشترك بالفعل – Termin Notify",
+        'body_new': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>مرحباً {name}،</p>
+            <p>شكراً لتسجيلك! سيتم إعلامك بمواعيد <strong>{office}</strong> في <strong>{city}</strong>. 📬</p>
+            <p>ادعمنا من خلال <a href="{wishlist}">قائمة الأمنيات</a>. 🙌</p>
+            <p>هل غيّرت رأيك؟ <a href="{unsubscribe}">اضغط هنا لإلغاء الاشتراك</a>.</p>
+            <p>مع تحياتنا،<br>فريق Termin Notify</p>
+        """,
+        'body_duplicate': lambda name, city, office, wishlist, unsubscribe: f"""
+            <p>مرحباً {name}،</p>
+            <p>أنت مشترك بالفعل في إشعارات <strong>{office}</strong> في <strong>{city}</strong>. 📝</p>
+            <p>سنعلمك عند توفر موعد جديد.</p>
+            <p><a href="{wishlist}">قائمة الأمنيات</a> إن أحببت أن تدعمنا. 🎁</p>
+            <p><a href="{unsubscribe}">إلغاء الاشتراك</a></p>
+            <p>مع تحياتنا،<br>فريق Termin Notify</p>
+        """
+    }
+}
+
+def send_confirmation_email(name, to_email, city, office, duplicate):
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
+    # Get language from DB
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (to_email, city, office))
+    result = cursor.fetchone()
+    conn.close()
+
+    language = result[0] if result and result[0] in email_translations else 'en'
+
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
-    resubscribe_link = f"{DOMAIN}/resubscribe?{urlencode({'email': to_email, 'city': city, 'office': office, 'name': name})}"
 
-    subjects = {
-        "en": {
-            "duplicate": "You're already subscribed – Termin Notify",
-            "new": "You're on the list! 🎉 – Termin Notify"
-        },
-        "fa": {
-            "duplicate": "شما قبلاً عضو شده‌اید – ترمین نوتیفای",
-            "new": "شما در لیست هستید! 🎉 – ترمین نوتیفای"
-        },
-        "de": {
-            "duplicate": "Du bist bereits angemeldet – Termin Notify",
-            "new": "Du stehst auf der Liste! 🎉 – Termin Notify"
-        }
-        # سایر زبان‌ها در صورت نیاز اضافه شود
-    }
+    t = email_translations[language]
 
-    bodies = {
-        "en": {
-            "duplicate": f"""
-                <p>Hi {name},</p>
-                <p>You're already on our list for <strong>{office}</strong> appointments in <strong>{city}</strong>. 📝</p>
-                <p>Check out our <a href="{WISHLIST_URL}">wishlist</a>. 🎁</p>
-                <p><a href="{unsubscribe_link}">Unsubscribe</a> anytime.</p>
-                <p>Cheers,<br>Termin Notify</p>
-            """,
-            "new": f"""
-                <p>Hi {name},</p>
-                <p>You’re subscribed to notifications for <strong>{office}</strong> in <strong>{city}</strong>. 📬</p>
-                <p><a href="{WISHLIST_URL}">Support us</a> if you like.</p>
-                <p>To unsubscribe, <a href="{unsubscribe_link}">click here</a>.</p>
-                <p>Cheers,<br>Termin Notify</p>
-            """
-        },
-        "fa": {
-            "duplicate": f"""
-                <p>سلام {name}،</p>
-                <p>شما قبلاً برای نوتیفیکیشن‌های <strong>{office}</strong> در <strong>{city}</strong> ثبت‌نام کرده‌اید. 📝</p>
-                <p>از <a href="{WISHLIST_URL}">لیست آرزوهای ما</a> دیدن کنید. 🎁</p>
-                <p><a href="{unsubscribe_link}">لغو عضویت</a></p>
-                <p>با احترام،<br>تیم ترمین نوتیفای</p>
-            """,
-            "new": f"""
-                <p>سلام {name}،</p>
-                <p>ثبت‌نام شما برای نوتیفیکیشن‌های <strong>{office}</strong> در <strong>{city}</strong> موفقیت‌آمیز بود. 📬</p>
-                <p><a href="{WISHLIST_URL}">ما را حمایت کنید</a> اگر خواستید.</p>
-                <p><a href="{unsubscribe_link}">لغو عضویت</a></p>
-                <p>با احترام،<br>تیم ترمین نوتیفای</p>
-            """
-        },
-        "de": {
-            "duplicate": f"""
-                <p>Hallo {name},</p>
-                <p>Du bist bereits für <strong>{office}</strong> in <strong>{city}</strong> registriert. 📝</p>
-                <p>Schaue auf unsere <a href="{WISHLIST_URL}">Wunschliste</a>. 🎁</p>
-                <p><a href="{unsubscribe_link}">Abmelden</a></p>
-                <p>Grüße,<br>Termin Notify Team</p>
-            """,
-            "new": f"""
-                <p>Hallo {name},</p>
-                <p>Du bist jetzt für <strong>{office}</strong> in <strong>{city}</strong> registriert. 📬</p>
-                <p><a href="{WISHLIST_URL}">Unterstütze uns</a>, wenn du möchtest.</p>
-                <p><a href="{unsubscribe_link}">Abmelden</a></p>
-                <p>Grüße,<br>Termin Notify Team</p>
-            """
-        }
-    }
-
-    lang = language if language in subjects else "en"
-    status_key = "duplicate" if duplicate else "new"
-    subject = subjects[lang][status_key]
-    body = bodies[lang][status_key]
+    subject = t['subject_duplicate'] if duplicate else t['subject_new']
+    body = t['body_duplicate'](name, city, office, WISHLIST_URL, unsubscribe_link) if duplicate else t['body_new'](name, city, office, WISHLIST_URL, unsubscribe_link)
 
     message = MIMEMultipart()
     message['From'] = sender_email
