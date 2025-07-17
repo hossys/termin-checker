@@ -201,25 +201,28 @@ email_translations = {
     }
 }
 
-def send_confirmation_email(name, to_email, city, office, duplicate):
+def send_confirmation_email(name, to_email, city, office, language=None, duplicate=False):
     sender_email = os.getenv('EMAIL_USER')
     sender_password = os.getenv('EMAIL_PASS')
 
-    # Get language from DB
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (to_email, city, office))
-    result = cursor.fetchone()
-    conn.close()
 
-    language = result[0] if result and result[0] in email_translations else 'en'
+    if not language:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT language FROM subscribers WHERE email = ? AND city = ? AND office = ?", (to_email, city, office))
+        result = cursor.fetchone()
+        conn.close()
+        language = result[0] if result and result[0] in email_translations else 'en'
+
 
     unsubscribe_link = f"{DOMAIN}/unsubscribe?{urlencode({'email': to_email, 'city': city, 'office': office})}"
 
-    t = email_translations[language]
+
+    t = email_translations.get(language, email_translations['en'])
 
     subject = t['subject_duplicate'] if duplicate else t['subject_new']
     body = t['body_duplicate'](name, city, office, WISHLIST_URL, unsubscribe_link) if duplicate else t['body_new'](name, city, office, WISHLIST_URL, unsubscribe_link)
+
 
     message = MIMEMultipart()
     message['From'] = sender_email
@@ -266,12 +269,20 @@ def resubscribe():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    if not name:
-        cursor.execute("""
-            SELECT name FROM subscribers WHERE email = ? AND city = ? AND office = ?
-        """, (email, city, office))
-        row = cursor.fetchone()
-        name = row[0] if row else "Friend"
+
+    cursor.execute("""
+        SELECT name, language FROM subscribers WHERE email = ? AND city = ? AND office = ?
+    """, (email, city, office))
+    row = cursor.fetchone()
+
+    if not row:
+        conn.close()
+        return "User not found.", 404
+
+    name_from_db = row[0] if row[0] else "Friend"
+    language = row[1] if row[1] else "en"
+
+    name = name or name_from_db
 
     cursor.execute("""
         UPDATE subscribers 
@@ -281,9 +292,9 @@ def resubscribe():
     conn.commit()
     conn.close()
 
-    send_confirmation_email(name, email, city, office, "en", duplicate=False)
-    return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
+    send_confirmation_email(name, email, city, office, language, duplicate=False)
 
+    return render_template("resubscribed.html", city=city, office=office, email=email, wishlist_url=WISHLIST_URL)
 def log(text):
     with open("test_log.txt", "a") as f:
         f.write(text + "\n")
