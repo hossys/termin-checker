@@ -357,5 +357,59 @@
       document.getElementById("selected-language").value = lang;
     }
   </script>
+  <script>
+  document.getElementById("subscribe-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const lang = document.getElementById("selected-language").value;
+
+    try {
+      const response = await fetch("/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (["success", "resubscribed", "duplicate"].includes(result.status)) {
+        document.getElementById("form-box").style.display = "none";
+
+        // Switch image
+        document.getElementById("img-before").classList.remove("active");
+        document.getElementById("img-after").classList.add("active");
+
+        // Show thank you message
+        const thankMessages = {
+          en: "Thanks! We’ll notify you when something opens up.",
+          de: "Danke! Wir benachrichtigen dich, wenn ein Termin verfügbar ist.",
+          fa: "مرسی! به‌محض باز شدن وقت، بهت خبر می‌دیم.",
+          tr: "Teşekkürler! Randevu açıldığında sizi bilgilendireceğiz.",
+          uk: "Дякуємо! Повідомимо, коли з’явиться новий термін.",
+          ar: "شكراً! سنعلمك عند توفر موعد جديد."
+        };
+
+        const titleMap = {
+          en: "Thank you!",
+          de: "Danke!",
+          fa: "ممنون!",
+          tr: "Teşekkürler!",
+          uk: "Дякуємо!",
+          ar: "شكراً!"
+        };
+
+        document.getElementById("thank-title").innerText = titleMap[lang] || "Thank you!";
+        document.getElementById("thank-text").innerText = thankMessages[lang] || thankMessages['en'];
+
+        document.getElementById("thank-you").classList.add("show");
+      } else {
+        alert(result.message || "Something went wrong.");
+      }
+    } catch (err) {
+      alert("Something went wrong while submitting.");
+      console.error(err);
+    }
+  });
+</script>
 </body>
 </html>
