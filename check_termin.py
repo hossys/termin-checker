@@ -114,9 +114,10 @@ def check_berlin():
 
 def check_munich():
     log("🔍 Checking appointments for munich")
-    url = city_config["munich"]["url"]
+    url = "https://www.mvhs.de/kurse/deutsch-integration/pruefungen-einbuergerung/einbuergerung/einbuergerungstest/einbuergerungstest/anmeldung-nur-fuer-menschen-mit-wohnort-in-der-landeshauptstadt-muenchen-begrenzte-teilnehmerzahl-10-tage-vor-der-pruefung-bekommen-sie-die-genauen-pruefungszeiten-mit-der-post-zugeschickt-460-C-V674110"
+
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         if response.status_code != 200:
             log(f"❌ Munich: Failed to fetch URL – Status code: {response.status_code}")
             return None
@@ -124,21 +125,16 @@ def check_munich():
         log(f"❌ Munich: Exception during request: {e}")
         return None
 
-    soup = BeautifulSoup(response.text, 'html.parser')
-    all_cards = soup.select("div.card-list-item-info")
-    if not all_cards:
-        log("❌ Munich: No appointment cards found (empty all_cards).")
+    soup = BeautifulSoup(response.text, "html.parser")
+    appointment = soup.select_one("li.courseTime")
+
+    if appointment:
+        text = appointment.get_text(strip=True).lower()
+        log(f"✅ Munich: Appointment found – {text}")
+        return url
+    else:
+        log("❌ Munich: No available appointments found (no courseTime found).")
         return None
-
-    for i, card in enumerate(all_cards):
-        card_text = card.get_text(separator=" ", strip=True).lower()
-        log(f"🔎 Munich: card content: {card_text}")
-        if any(day in card_text for day in ["termin", "fr.", "mo.", "di.", "mi."]):
-            log(f"✅ Munich: Found appointment card: {card_text}")
-            return url
-
-    log("❌ Munich: No available appointments found.")
-    return None
 
 def check_frankfurt():
     log("🔍 Checking appointments for frankfurt")
