@@ -104,17 +104,76 @@
       <img src="{{ url_for('static', filename='after.webp') }}" alt="You're back!">
     </div>
     <div class="form-box">
-      <h2>You’re back on the list!</h2>
-      <p>You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.<br>
+      <h2 id="resub-title">You’re back on the list!</h2>
+      <p id="resub-text">You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>.<br>
       We’ll notify you as soon as a slot opens. 🎉</p>
 
-      <a class="button" href="{{ wishlist_url }}" target="_blank">Wish List</a>
+      <a class="button" href="{{ wishlist_url }}" target="_blank" id="wishlist-btn">Wish List</a>
     </div>
   </div>
-<footer style="text-align:center; font-size: 14px; color: #555; padding: 20px 10px; margin-top: 30px;">
-  Terminotify helps you get notified when a new appointment becomes available – no need to refresh city websites all the time.
-  <br><br>
-  <strong>Contact:</strong> <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
-</footer>
+
+  <footer style="text-align:center; font-size: 14px; color: #555; padding: 20px 10px; margin-top: 30px;" id="footer-text">
+    Terminotify helps you get notified when a new appointment becomes available – no need to refresh city websites all the time.
+    <br><br>
+    <strong id="footer-contact-label">Contact:</strong> <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        title: "You’re back on the list!",
+        message: "You’ve been re-subscribed for <strong>{{ office }}</strong> in <strong>{{ city }}</strong>. We’ll notify you as soon as a slot opens. 🎉",
+        button: "Wish List",
+        footer: "Terminotify helps you get notified when a new appointment becomes available – no need to refresh city websites all the time.",
+        contact: "Contact:"
+      },
+      fa: {
+        title: "شما دوباره در لیست هستید!",
+        message: "شما برای <strong>{{ office }}</strong> در <strong>{{ city }}</strong> دوباره عضو شدید. به‌محض باز شدن وقت جدید به شما اطلاع می‌دهیم. 🎉",
+        button: "لیست آرزوها",
+        footer: "Terminotify به شما کمک می‌کند از وقت‌های جدید باخبر شوید – بدون نیاز به رفرش کردن سایت‌ها.",
+        contact: "ارتباط:"
+      },
+      de: {
+        title: "Du bist wieder auf der Liste!",
+        message: "Du wurdest erneut für <strong>{{ office }}</strong> in <strong>{{ city }}</strong> angemeldet. Wir benachrichtigen dich, sobald ein Termin verfügbar ist. 🎉",
+        button: "Wunschliste",
+        footer: "Terminotify benachrichtigt dich, wenn ein neuer Termin verfügbar ist – kein ständiges Aktualisieren nötig.",
+        contact: "Kontakt:"
+      },
+      tr: {
+        title: "Yeniden listeye eklendiniz!",
+        message: "<strong>{{ city }}</strong> şehrindeki <strong>{{ office }}</strong> için yeniden abone oldunuz. Yeni bir randevu açıldığında sizi bilgilendireceğiz. 🎉",
+        button: "İstek Listesi",
+        footer: "Terminotify, yeni bir randevu açıldığında sizi bilgilendirir – sayfayı yenilemenize gerek kalmaz.",
+        contact: "İletişim:"
+      },
+      uk: {
+        title: "Вас знову додано до списку!",
+        message: "Ви знову підписані на <strong>{{ office }}</strong> у <strong>{{ city }}</strong>. Ми повідомимо вас, як тільки з’явиться новий термін. 🎉",
+        button: "Список бажань",
+        footer: "Terminotify повідомляє, коли з’являються нові терміни – без потреби оновлювати сторінку.",
+        contact: "Зв'язок:"
+      },
+      ar: {
+        title: "لقد تم إعادة اشتراكك في القائمة!",
+        message: "تمت إعادة اشتراكك في إشعارات <strong>{{ office }}</strong> في <strong>{{ city }}</strong>. سنبلغك عند توفر موعد جديد. 🎉",
+        button: "قائمة الأمنيات",
+        footer: "تساعدك Terminotify على تلقي إشعارات عندما تتوفر مواعيد جديدة – دون الحاجة إلى تحديث الصفحة.",
+        contact: "تواصل معنا:"
+      }
+    };
+
+    const lang = "{{ language or 'en' }}";
+    const t = translations[lang] || translations['en'];
+
+    document.getElementById("resub-title").innerText = t.title;
+    document.getElementById("resub-text").innerHTML = t.message;
+    document.getElementById("wishlist-btn").innerText = t.button;
+    document.getElementById("footer-text").innerHTML = `
+      ${t.footer}<br><br><strong id="footer-contact-label">${t.contact}</strong>
+      <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+    `;
+  </script>
 </body>
 </html>
