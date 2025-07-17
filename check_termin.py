@@ -4,6 +4,7 @@ import json
 import smtplib
 import sqlite3
 import os
+import pytz
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
@@ -42,7 +43,11 @@ city_config = {
 }
 
 def log(text):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    from_zone = pytz.utc
+    to_zone = pytz.timezone('Europe/Berlin')
+    utc_time = datetime.utcnow().replace(tzinfo=from_zone)
+    berlin_time = utc_time.astimezone(to_zone)
+    timestamp = berlin_time.strftime("%Y-%m-%d %H:%M:%S")
     with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(f"[{timestamp}] {text}\n")
 
