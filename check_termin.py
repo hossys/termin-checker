@@ -121,6 +121,8 @@ def check_berlin():
         return None
 
 def check_munich():
+    for i, card in enumerate(all_cards):
+        log(f"🔍 Card {i}: {card.prettify()}")
     log("🔍 Checking appointments for munich")
     url = city_config["munich"]["url"]
     try:
