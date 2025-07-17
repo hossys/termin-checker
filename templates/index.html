@@ -296,26 +296,40 @@
       document.getElementById('thank-you').classList.add('show');
     });
   </script>
-<footer style="text-align: center; font-size: 12px; color: #555; padding: 20px 10px; margin-top: 30px;">
-  <p id="footer-text" style="margin-bottom: 10px;">
+<footer style="font-size: 12px; color: #555; padding: 20px 10px; margin-top: 30px;">
+  <p id="footer-text" style="text-align: center; margin-bottom: 10px;">
     Get notified when appointments open – no refreshing needed.
   </p>
-  
-  <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px;">
-    <span id="footer-contact-label"><strong>Contact us:</strong></span>
-    <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
 
-    <div style="display: flex; align-items: center; gap: 4px; vertical-align: middle;">
-  <span style="font-size: 15px; line-height: 1; position: relative; top: 1px;">🌐</span>
-  <select id="language" onchange="changeLanguage()" style="font-size: 12px; padding: 3px 6px; border-radius: 4px; vertical-align: middle; position: relative; top: 1px;">
-    <option value="en" selected>EN</option>
-    <option value="de">DE</option>
-    <option value="fa">FA</option>
-    <option value="tr">TR</option>
-    <option value="uk">UK</option>
-    <option value="ar">AR</option>
-  </select>
-</div>
+  <div style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-align: center;
+  ">
+    <div>
+      <strong>Contact us:</strong>
+      <a href="mailto:terminnotify@gmail.com" style="color: #007BFF; text-decoration: none;">terminnotify@gmail.com</a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <span style="font-size: 15px;">🌐</span>
+      <select id="language" onchange="changeLanguage()" style="
+        font-size: 12px;
+        padding: 4px 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      ">
+        <option value="en" selected>EN</option>
+        <option value="de">DE</option>
+        <option value="fa">FA</option>
+        <option value="tr">TR</option>
+        <option value="uk">UK</option>
+        <option value="ar">AR</option>
+      </select>
+    </div>
   </div>
 </footer>
 </body>
